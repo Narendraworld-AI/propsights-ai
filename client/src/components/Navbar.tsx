@@ -8,15 +8,13 @@ export function Navbar() {
   return (
     <nav className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md dark:bg-slate-950/80">
       <div className="container flex h-16 items-center justify-between px-4">
-        <Link href="/">
-          <a className="flex items-center gap-2">
-            <div className="bg-primary rounded-lg p-1.5">
-              <MapPin className="h-5 w-5 text-white" />
-            </div>
-            <span className="font-display text-xl font-bold tracking-tight text-slate-900 dark:text-white">
-              PropSight<span className="text-primary">.in</span>
-            </span>
-          </a>
+        <Link href="/" className="flex items-center gap-2 cursor-pointer">
+          <div className="bg-primary rounded-lg p-1.5">
+            <MapPin className="h-5 w-5 text-white" />
+          </div>
+          <span className="font-display text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+            PropSight<span className="text-primary">.in</span>
+          </span>
         </Link>
 
         {isAnalysis && (

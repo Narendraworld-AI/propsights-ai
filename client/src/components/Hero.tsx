@@ -1,21 +1,20 @@
 import { motion } from "framer-motion";
-import { Search, MapPin, Navigation } from "lucide-react";
+import { Navigation } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
-import heroImage from "@/assets/hero-bg.png"; // We'll assume this imports correctly after build
+import heroImage from "@/assets/hero-bg.png";
 import { POPULAR_LOCATIONS } from "@/lib/mockData";
 import { useToast } from "@/hooks/use-toast";
+import { LocationSelector } from "@/components/LocationSelector";
 
 export function Hero() {
-  const [searchValue, setSearchValue] = useState("");
   const [_, setLocation] = useLocation();
   const { toast } = useToast();
   const [isLocating, setIsLocating] = useState(false);
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchValue.trim()) {
-      setLocation(`/analysis/${encodeURIComponent(searchValue)}`);
+  const handleLocationSelect = (value: string) => {
+    if (value) {
+      setLocation(`/analysis/${encodeURIComponent(value)}`);
     }
   };
 
@@ -23,19 +22,17 @@ export function Hero() {
     setIsLocating(true);
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
-          // In a real app, we'd reverse geocode here. 
-          // For mockup, we'll simulate finding a nearby area
+        () => {
           setTimeout(() => {
             setIsLocating(false);
-            setLocation("/analysis/Indiranagar, Bangalore");
+            setLocation("/analysis/Indiranagar, Bengaluru");
             toast({
               title: "Location Detected",
-              description: "Showing data for Indiranagar, Bangalore (Nearby)",
+              description: "Showing data for Indiranagar, Bengaluru (Nearby)",
             });
           }, 1500);
         },
-        (error) => {
+        () => {
           setIsLocating(false);
           toast({
             variant: "destructive",
@@ -56,7 +53,6 @@ export function Hero() {
 
   return (
     <div className="relative overflow-hidden bg-slate-50 min-h-[calc(100vh-4rem)] flex items-center">
-      {/* Background Graphic */}
       <div className="absolute inset-0 z-0 opacity-20 md:opacity-100 md:left-1/3 pointer-events-none">
         <img 
           src={heroImage} 
@@ -82,56 +78,45 @@ export function Hero() {
             </div>
             
             <h1 className="text-4xl md:text-6xl font-display font-bold text-slate-900 leading-tight mb-6">
-              Predict the future of your <span className="text-primary">next investment</span>
+              Real Estate Analytics <br/><span className="text-primary">Simplified.</span>
             </h1>
             
             <p className="text-lg text-slate-600 mb-8 leading-relaxed max-w-lg">
-              Analyze property price trends across India with AI-powered forecasts. Get 10-year growth projections for any location.
+              Track price trends and get AI-powered 10-year forecasts for any locality in India.
             </p>
 
-            <div className="bg-white p-2 rounded-2xl shadow-xl border border-slate-100 max-w-lg mb-8">
-              <form onSubmit={handleSearch} className="flex gap-2">
-                <div className="flex-1 relative">
-                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400" />
-                  <input
-                    type="text"
-                    placeholder="Enter locality (e.g. Bandra West, Mumbai)"
-                    className="w-full pl-10 pr-4 py-3 rounded-xl bg-slate-50 border-transparent focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all placeholder:text-slate-400 text-slate-900"
-                    value={searchValue}
-                    onChange={(e) => setSearchValue(e.target.value)}
-                  />
+            <div className="bg-white p-4 rounded-2xl shadow-xl border border-slate-100 max-w-lg mb-8">
+              <div className="flex flex-col gap-3">
+                <label className="text-sm font-medium text-slate-700 ml-1">Select Location</label>
+                <div className="flex gap-2 w-full">
+                   <div className="flex-1">
+                     <LocationSelector onSelect={handleLocationSelect} placeholder="Search City, Area, Sector..." />
+                   </div>
                 </div>
-                <button 
-                  type="submit"
-                  className="bg-primary hover:bg-primary/90 text-white px-6 py-3 rounded-xl font-medium transition-colors flex items-center gap-2"
-                >
-                  <Search className="h-5 w-5" />
-                  <span className="hidden sm:inline">Analyze</span>
-                </button>
-              </form>
-              
-              <div className="mt-2 px-2 pb-1 flex items-center justify-between">
-                <button 
-                  onClick={handleUseLocation}
-                  disabled={isLocating}
-                  className="text-sm font-medium text-slate-500 hover:text-primary flex items-center gap-1.5 transition-colors disabled:opacity-50"
-                >
-                  <Navigation className={`h-3.5 w-3.5 ${isLocating ? 'animate-spin' : ''}`} />
-                  {isLocating ? "Detecting..." : "Use current location"}
-                </button>
+                
+                <div className="flex justify-end">
+                   <button 
+                    onClick={handleUseLocation}
+                    disabled={isLocating}
+                    className="text-xs font-medium text-primary hover:underline flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                  >
+                    <Navigation className={`h-3 w-3 ${isLocating ? 'animate-spin' : ''}`} />
+                    {isLocating ? "Detecting location..." : "Use my current location"}
+                  </button>
+                </div>
               </div>
             </div>
 
             <div className="space-y-3">
-              <p className="text-sm font-medium text-slate-400 uppercase tracking-wider">Trending Locations</p>
+              <p className="text-sm font-medium text-slate-400 uppercase tracking-wider">Trending Cities</p>
               <div className="flex flex-wrap gap-2">
-                {POPULAR_LOCATIONS.slice(0, 4).map((loc) => (
+                {['Mumbai', 'Bengaluru', 'Delhi NCR', 'Hyderabad'].map((city) => (
                   <button
-                    key={loc}
-                    onClick={() => setLocation(`/analysis/${encodeURIComponent(loc)}`)}
+                    key={city}
+                    onClick={() => handleLocationSelect(`${city}`)} // Just searching the city name to find first match or fallback
                     className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-sm text-slate-600 hover:border-primary hover:text-primary transition-colors shadow-sm"
                   >
-                    {loc.split(',')[0]}
+                    {city}
                   </button>
                 ))}
               </div>
