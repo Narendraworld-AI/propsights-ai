@@ -4,12 +4,12 @@ import { Navbar } from "@/components/Navbar";
 import { generateMockData, RealEstateData } from "@/lib/mockData";
 import { PriceChart } from "@/components/PriceChart";
 import { ForecastChart } from "@/components/ForecastChart";
+import { PriceHistoryTable } from "@/components/PriceHistoryTable";
 import { StatsGrid } from "@/components/StatsGrid";
 import { MapView } from "@/components/MapView";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
 import { MapPin, Info, AlertTriangle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { motion } from "framer-motion";
@@ -36,31 +36,43 @@ export default function Analysis() {
     }
 
     setLoading(true);
+    setData(null); // Clear previous data to force re-render
+
     // Simulate API fetch delay
     const timer = setTimeout(() => {
-      const locationQuery = decodeURIComponent(params.location);
-      const mockData = generateMockData(locationQuery);
-      setData(mockData);
-      setLoading(false);
-
-      if (mockData.isNearbyFallback) {
-        setShowFallbackDialog(true);
+      try {
+        const locationQuery = decodeURIComponent(params.location);
+        const mockData = generateMockData(locationQuery);
+        
+        if (mockData) {
+          setData(mockData);
+          if (mockData.isNearbyFallback) {
+            setShowFallbackDialog(true);
+          }
+        } else {
+          console.error("Failed to generate mock data");
+        }
+      } catch (error) {
+        console.error("Error generating data:", error);
+      } finally {
+        setLoading(false);
       }
-    }, 1000);
+    }, 800);
 
     return () => clearTimeout(timer);
-  }, [match, params, setLocation]);
+  }, [match, params?.location]); // Depend on params.location explicitly
 
   if (loading) {
     return <AnalysisSkeleton />;
   }
 
-  // If data is null after loading (shouldn't happen with mock data but good safety)
   if (!data) {
     return (
-      <div className="min-h-screen flex items-center justify-center flex-col gap-4">
-        <h2 className="text-xl font-bold">Data Unavailable</h2>
-        <Button onClick={() => setLocation("/")}>Go Back</Button>
+      <div className="min-h-screen flex items-center justify-center flex-col gap-4 bg-slate-50">
+        <AlertTriangle className="h-12 w-12 text-slate-300" />
+        <h2 className="text-xl font-bold text-slate-700">Unable to load data</h2>
+        <p className="text-slate-500">We couldn't generate analytics for this location.</p>
+        <Button onClick={() => setLocation("/")}>Search Another Location</Button>
       </div>
     );
   }
@@ -78,9 +90,9 @@ export default function Analysis() {
               Exact Location Data Not Found
             </DialogTitle>
             <DialogDescription className="pt-2">
-              We couldn't find sufficient data for <strong>{data.location}</strong>. 
+              We couldn't find sufficient data for <strong>{params?.location ? decodeURIComponent(params.location) : "your location"}</strong>. 
               <br/><br/>
-              We are showing data for <strong>{data.nearbyLocationName}</strong> (Nearby) instead to give you the best available market insights.
+              We are showing data for nearby <strong>{data.nearbyLocationName}</strong> instead.
             </DialogDescription>
           </DialogHeader>
           <div className="flex justify-end">
@@ -135,7 +147,7 @@ export default function Analysis() {
             <Info className="h-4 w-4 text-amber-600" />
             <AlertTitle className="text-amber-800">Showing Nearby Data</AlertTitle>
             <AlertDescription className="text-amber-700">
-              Data for <strong>{data.location}</strong> was insufficient. Displaying analytics for nearby <strong>{data.nearbyLocationName}</strong>.
+              Data for the exact location was insufficient. Displaying analytics for <strong>{data.nearbyLocationName}</strong>.
             </AlertDescription>
           </Alert>
         )}
@@ -152,78 +164,81 @@ export default function Analysis() {
             <Tabs defaultValue="history" className="w-full">
               <div className="flex items-center justify-between mb-4">
                 <TabsList className="grid w-[300px] grid-cols-2">
-                  <TabsTrigger value="history">Historical (1Y)</TabsTrigger>
-                  <TabsTrigger value="forecast">Forecast (10Y)</TabsTrigger>
+                  <TabsTrigger value="history">Historical Trend</TabsTrigger>
+                  <TabsTrigger value="forecast">Future Forecast</TabsTrigger>
                 </TabsList>
               </div>
               
-              <TabsContent value="history" className="mt-0">
+              <TabsContent value="history" className="mt-0 space-y-6">
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
+                  initial={{ opacity: 0, scale: 0.99 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3 }}
                 >
                   <PriceChart data={data.history} />
                 </motion.div>
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                   <PriceHistoryTable history={data.history} />
+                   
+                   <div className="bg-white p-6 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-center">
+                      <h3 className="font-semibold text-slate-800 mb-4">Market Sentiment</h3>
+                      <div className="flex items-center gap-4 mb-2">
+                        <div className="h-2 flex-1 bg-slate-100 rounded-full overflow-hidden">
+                          <div className="h-full w-[80%] bg-primary rounded-full"></div>
+                        </div>
+                        <span className="font-bold text-primary">Bullish</span>
+                      </div>
+                      <p className="text-sm text-slate-500 mt-2">
+                        Prices in <strong>{data.area}</strong> have grown by {(data.yoyGrowth).toFixed(1)}% in the last year, outperforming the city average.
+                      </p>
+                   </div>
+                </div>
               </TabsContent>
               
-              <TabsContent value="forecast" className="mt-0">
+              <TabsContent value="forecast" className="mt-0 space-y-6">
                 <motion.div
-                  initial={{ opacity: 0, scale: 0.95 }}
+                  initial={{ opacity: 0, scale: 0.99 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3 }}
                 >
                   <ForecastChart data={data.forecast} />
                 </motion.div>
+
+                <div className="bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
+                  <h3 className="font-semibold text-slate-800 mb-4">Why invest in {data.area}?</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {['High Appreciation Potential', 'Upcoming Infrastructure', 'Rental Demand', 'Connectivity'].map((item, i) => (
+                      <div key={i} className="flex items-center gap-2 text-sm text-slate-700 p-3 bg-slate-50 rounded-lg">
+                        <div className="h-2 w-2 rounded-full bg-accent"></div>
+                        {item}
+                      </div>
+                    ))}
+                  </div>
+                </div>
               </TabsContent>
             </Tabs>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-               <div className="bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
-                  <h3 className="font-semibold text-slate-800 mb-4">Growth Drivers</h3>
-                  <ul className="space-y-3">
-                    {['Upcoming Metro Station', 'Proximity to IT Hubs', 'Improved Road Connectivity', 'New Commercial Projects'].map((item, i) => (
-                      <li key={i} className="flex items-start gap-2 text-sm text-slate-600">
-                        <div className="h-1.5 w-1.5 rounded-full bg-accent mt-1.5"></div>
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-               </div>
-               <div className="bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
-                  <h3 className="font-semibold text-slate-800 mb-4">Market Sentiment</h3>
-                  <div className="flex items-center gap-4 mb-2">
-                    <div className="h-2 flex-1 bg-slate-100 rounded-full overflow-hidden">
-                      <div className="h-full w-[75%] bg-primary rounded-full"></div>
-                    </div>
-                    <span className="font-bold text-primary">High Demand</span>
-                  </div>
-                  <p className="text-xs text-slate-400">
-                    High demand for 2BHK and 3BHK units in this sector due to competitive pricing.
-                  </p>
-               </div>
-            </div>
           </div>
           
           <div className="space-y-6">
-            <div className="bg-white p-1 rounded-xl shadow-soft border border-border">
+            <div className="bg-white p-1 rounded-xl shadow-soft border border-border sticky top-24">
                <div className="relative">
                  <MapView locationName={`${data.area}, ${data.city}`} />
-                 <div className="absolute bottom-4 left-4 right-4 bg-white/90 backdrop-blur-sm p-3 rounded-lg border border-slate-200 shadow-sm text-xs text-slate-600 z-[400]">
-                    <span className="font-semibold text-primary">Zone:</span> {data.city} South <br/>
-                    <span className="font-semibold text-primary">Sector:</span> {data.area} Phase 1
+                 <div className="p-4 space-y-3">
+                    <h4 className="font-semibold text-slate-900 flex items-center gap-2">
+                      <MapPin className="h-4 w-4 text-primary" />
+                      Location Details
+                    </h4>
+                    <div className="grid grid-cols-2 gap-2 text-sm">
+                       <div className="text-slate-500">Zone</div>
+                       <div className="font-medium text-slate-800">{data.city} Region</div>
+                       <div className="text-slate-500">Locality</div>
+                       <div className="font-medium text-slate-800">{data.area}</div>
+                       <div className="text-slate-500">Pincode</div>
+                       <div className="font-medium text-slate-800">400XXX</div>
+                    </div>
                  </div>
                </div>
-            </div>
-
-            <div className="bg-gradient-to-br from-slate-900 to-slate-800 p-6 rounded-xl text-white shadow-xl">
-              <h3 className="font-display font-bold text-lg mb-2">Get detailed report</h3>
-              <p className="text-slate-300 text-sm mb-4">
-                Download a comprehensive PDF report with 50+ data points for {data.area}.
-              </p>
-              <button className="w-full py-2 bg-white text-slate-900 rounded-lg font-medium text-sm hover:bg-slate-50 transition-colors">
-                Download PDF
-              </button>
             </div>
           </div>
         </div>
@@ -253,10 +268,13 @@ function AnalysisSkeleton() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-4">
             <Skeleton className="h-[400px] rounded-xl" />
+            <div className="grid grid-cols-2 gap-4">
+              <Skeleton className="h-[200px] rounded-xl" />
+              <Skeleton className="h-[200px] rounded-xl" />
+            </div>
           </div>
           <div className="space-y-4">
              <Skeleton className="h-[300px] rounded-xl" />
-             <Skeleton className="h-[150px] rounded-xl" />
           </div>
         </div>
       </main>

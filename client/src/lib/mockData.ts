@@ -1,4 +1,9 @@
-import { addMonths, format, subMonths } from "date-fns";
+import { addYears, format, subYears } from "date-fns";
+
+export interface YearlyDataPoint {
+  year: number;
+  price: number;
+}
 
 export interface RealEstateData {
   location: string;
@@ -11,43 +16,50 @@ export interface RealEstateData {
   transactions: number;
   projectedGrowth5y: number;
   projectedGrowth10y: number;
-  history: Array<{
-    date: string;
-    price: number;
-  }>;
+  history: YearlyDataPoint[];
   forecast: Array<{
     date: string;
+    year: number;
     price: number;
     lowerBound: number;
     upperBound: number;
   }>;
 }
 
-// Structured Data for Dropdowns
+// EXPANDED DATASET FOR INDIAN CITIES
 export const INDIAN_CITIES = {
-  "Mumbai": [
-    "Bandra West", "Andheri East", "Powai", "Juhu", "Worli", "Lower Parel", "Chembur", "Goregaon", "Malad", "Borivali"
-  ],
   "Delhi NCR": [
-    "Vasant Kunj", "Greater Kailash", "Dwarka", "Saket", "Hauz Khas", "Gurgaon - Cyber City", "Gurgaon - Sector 56", "Noida - Sector 62", "Noida - Sector 150"
+    // Delhi
+    "Vasant Kunj", "Greater Kailash", "Saket", "Hauz Khas", "Dwarka", "Rohini", "Lajpat Nagar", "Defence Colony", "Mayur Vihar", "Janakpuri",
+    // Gurugram
+    "Gurgaon - Cyber City", "Gurgaon - Sector 56", "Gurgaon - Sector 45", "Gurgaon - Golf Course Road", "Gurgaon - Sohna Road", "Gurgaon - MG Road", "Gurgaon - Sector 82",
+    // Noida
+    "Noida - Sector 62", "Noida - Sector 150", "Noida - Sector 137", "Noida - Sector 75", "Noida - Sector 44", "Noida - Sector 18",
+    // Ghaziabad
+    "Indirapuram", "Vaishali", "Vasundhara", "Raj Nagar Extension", "Crossings Republik",
+    // Faridabad
+    "Faridabad - Sector 15", "Faridabad - Neharpar", "Faridabad - NIT"
+  ],
+  "Mumbai": [
+    "Bandra West", "Andheri East", "Andheri West", "Powai", "Juhu", "Worli", "Lower Parel", "Chembur", "Goregaon East", "Goregaon West", "Malad West", "Borivali East", "Kandivali", "Mulund", "Thane West", "Navi Mumbai - Vashi", "Navi Mumbai - Kharghar"
   ],
   "Bengaluru": [
-    "Indiranagar", "Koramangala", "Whitefield", "HSR Layout", "Jayanagar", "Electronic City", "Hebbal", "Malleshwaram", "Yelahanka"
+    "Indiranagar", "Koramangala", "Whitefield", "HSR Layout", "Jayanagar", "Electronic City", "Hebbal", "Malleshwaram", "Yelahanka", "Sarjapur Road", "Marathahalli", "Bellandur", "Banashankari", "JP Nagar"
   ],
   "Hyderabad": [
-    "Gachibowli", "Jubilee Hills", "Banjara Hills", "Hitech City", "Kondapur", "Madhapur", "Begumpet", "Kukatpally"
+    "Gachibowli", "Jubilee Hills", "Banjara Hills", "Hitech City", "Kondapur", "Madhapur", "Begumpet", "Kukatpally", "Manikonda", "Miyapur", "Nallagandla"
   ],
   "Pune": [
-    "Koregaon Park", "Viman Nagar", "Kalyani Nagar", "Baner", "Wakad", "Hinjewadi", "Aundh", "Hadapsar"
+    "Koregaon Park", "Viman Nagar", "Kalyani Nagar", "Baner", "Wakad", "Hinjewadi", "Aundh", "Hadapsar", "Magarpatta", "Kharadi", "Pimple Saudagar"
   ],
   "Chennai": [
-    "Adyar", "Besant Nagar", "Anna Nagar", "T Nagar", "Velachery", "OMR", "Porur", "Mylapore"
+    "Adyar", "Besant Nagar", "Anna Nagar", "T Nagar", "Velachery", "OMR", "Porur", "Mylapore", "Nungambakkam", "Thiruvanmiyur", "Medavakkam"
   ],
   "Kolkata": [
-    "Salt Lake", "New Town", "Park Street", "Ballygunge", "Dum Dum", "Jadavpur"
+    "Salt Lake", "New Town", "Park Street", "Ballygunge", "Dum Dum", "Jadavpur", "Rajarhat", "Garia", "Behala"
   ],
   "Ahmedabad": [
-    "Satellite", "Bodakdev", "Vastrapur", "Thaltej", "Gota", "Bopal"
+    "Satellite", "Bodakdev", "Vastrapur", "Thaltej", "Gota", "Bopal", "Mani Nagar", "Navrangpura", "SG Highway"
   ]
 };
 
@@ -56,27 +68,37 @@ export const SEARCHABLE_LOCATIONS = Object.entries(INDIAN_CITIES).flatMap(([city
   areas.map(area => ({ city, area, label: `${area}, ${city}` }))
 );
 
-export const POPULAR_LOCATIONS = [
-  "Bandra West, Mumbai",
-  "Indiranagar, Bengaluru",
-  "Cyber City, Delhi NCR",
-  "Gachibowli, Hyderabad"
-];
-
 const BASE_PRICES: Record<string, number> = {
-  "Mumbai": 25000,
-  "Delhi NCR": 12000,
-  "Bengaluru": 9000,
-  "Hyderabad": 7500,
-  "Chennai": 7000,
-  "Pune": 8000,
-  "Kolkata": 6000,
-  "Ahmedabad": 5000
+  "Mumbai": 22000,
+  "Delhi NCR": 10000,
+  "Bengaluru": 8500,
+  "Hyderabad": 7000,
+  "Chennai": 7500,
+  "Pune": 7800,
+  "Kolkata": 5500,
+  "Ahmedabad": 4800
 };
 
+// Growth Factors by City (CAGR estimate)
+const GROWTH_FACTORS: Record<string, number> = {
+  "Mumbai": 0.05,
+  "Delhi NCR": 0.06,
+  "Bengaluru": 0.09, // High growth IT hub
+  "Hyderabad": 0.10, // Emerging IT hub
+  "Pune": 0.07,
+  "Chennai": 0.05,
+  "Kolkata": 0.04,
+  "Ahmedabad": 0.06
+};
+
+// Deterministic Pseudo-Random Generator to ensure same data for same location
+function seededRandom(seed: number) {
+    var x = Math.sin(seed++) * 10000;
+    return x - Math.floor(x);
+}
+
 export const generateMockData = (query: string): RealEstateData => {
-  // 1. Parse Input
-  // Try to find exact match in our database
+  // 1. Identify Location
   let foundLocation = SEARCHABLE_LOCATIONS.find(l => 
     l.label.toLowerCase() === query.toLowerCase() || 
     l.area.toLowerCase() === query.toLowerCase()
@@ -85,9 +107,8 @@ export const generateMockData = (query: string): RealEstateData => {
   let isNearbyFallback = false;
   let nearbyLocationName = "";
   
-  // 2. Fallback Logic
+  // Fallback Logic
   if (!foundLocation) {
-    // If exact match not found, try to find partial match
     const partialMatch = SEARCHABLE_LOCATIONS.find(l => 
       l.label.toLowerCase().includes(query.toLowerCase()) ||
       query.toLowerCase().includes(l.area.toLowerCase())
@@ -96,78 +117,77 @@ export const generateMockData = (query: string): RealEstateData => {
     if (partialMatch) {
       foundLocation = partialMatch;
     } else {
-      // If absolutely no match, pick a "Nearby" location based on hash of string
-      // This simulates "Geospatial nearby search" when exact sector isn't found
       isNearbyFallback = true;
+      // Consistent fallback based on string length sum
       const hash = query.split("").reduce((a, b) => a + b.charCodeAt(0), 0);
-      const allLocations = SEARCHABLE_LOCATIONS;
-      foundLocation = allLocations[hash % allLocations.length];
+      foundLocation = SEARCHABLE_LOCATIONS[hash % SEARCHABLE_LOCATIONS.length];
       nearbyLocationName = foundLocation.label;
     }
   }
 
-  const cityBasePrice = BASE_PRICES[foundLocation.city] || 8000;
-  
-  // Deterministic "random" based on location length to keep it consistent
-  const areaPremium = (foundLocation.area.length * 100); 
-  const startPrice = cityBasePrice + areaPremium;
-  const volatility = startPrice * 0.02; // 2% volatility
-  
-  const history = [];
-  const today = new Date();
-  
-  // 3. Generate History (Last 12 Months)
-  // Trend: Generally upwards for India RE (say 6-12% annual)
-  const annualGrowthRateHistorical = 0.08; 
-  const monthlyGrowth = annualGrowthRateHistorical / 12;
+  // 2. Generate Base Parameters
+  const seed = foundLocation.area.length + foundLocation.city.length;
+  const basePrice = BASE_PRICES[foundLocation.city] || 5000;
+  // Area premium: Longer names or specific letters get slight premium to vary prices
+  const areaPremium = (seed * 120) % 5000; 
+  const currentPrice = basePrice + areaPremium;
+  const growthRate = GROWTH_FACTORS[foundLocation.city] || 0.06;
 
-  let currentMonthlyPrice = startPrice;
-
-  // We generate backwards from today to ensure today's price is the "current" one
-  // Wait, better to generate forward from 1 year ago
-  let priceRunner = startPrice;
-
-  for (let i = 12; i >= 0; i--) {
-    const date = subMonths(today, i);
-    // Add trend
-    priceRunner = priceRunner * (1 + monthlyGrowth);
-    // Add noise
-    const noise = (Math.sin(i * 0.5) * volatility);
-    
-    history.push({
-      date: format(date, "MMM yyyy"),
-      price: Math.round(priceRunner + noise),
-    });
+  // 3. Generate History (Last 10 Years)
+  const history: YearlyDataPoint[] = [];
+  const currentYear = new Date().getFullYear();
+  
+  // Generate backwards from 2025 down to 2015
+  // We want the curve to look realistic, so we add some seeded noise
+  let priceRunner = currentPrice;
+  
+  // Create historical data points
+  const historyPoints = [];
+  for (let i = 0; i <= 10; i++) {
+     const year = currentYear - i;
+     // Reverse growth calculation: Price = Current / (1+rate)^years
+     // Add noise
+     const noiseFactor = 1 + ((seededRandom(seed + year) - 0.5) * 0.04); // +/- 2% random fluctuation per year
+     
+     // Specific correction for COVID years (2020-2021) - market was flat/down
+     let yearGrowth = growthRate;
+     if (year === 2020 || year === 2021) yearGrowth = 0.01; 
+     
+     historyPoints.push({
+       year,
+       price: Math.round(priceRunner)
+     });
+     
+     priceRunner = priceRunner / (1 + yearGrowth) * noiseFactor;
   }
-
-  const currentPrice = history[history.length - 1].price;
-  const priceOneYearAgo = history[0].price;
+  
+  // Sort chronological
+  historyPoints.reverse();
+  
+  const priceOneYearAgo = historyPoints.find(p => p.year === currentYear - 1)?.price || currentPrice * 0.9;
   const yoyGrowth = ((currentPrice - priceOneYearAgo) / priceOneYearAgo) * 100;
 
-  // 4. Generate ML Forecast (Next 10 Years)
-  // Using a simplified Logarithmic decay growth model + Cyclical market adjustment
-  // Real estate doesn't grow linearly forever.
-  
+  // 4. Generate Forecast (Next 10 Years)
   const forecast = [];
   let futurePrice = currentPrice;
-  const longTermGrowthRate = 0.06; // 6% long term avg
   
-  for (let year = 1; year <= 10; year++) {
-    // Growth rate slightly decelerates over time (market maturation)
-    const yearGrowth = longTermGrowthRate + (Math.random() * 0.02 - 0.01); // Random fluctuation
+  for (let i = 1; i <= 10; i++) {
+    const year = currentYear + i;
+    // Future growth slightly dampens over time (logistic growth curve assumption)
+    const dampenedGrowth = growthRate * (1 - (i * 0.02)); // decays slightly
+    const yearGrowth = Math.max(0.03, dampenedGrowth) + ((seededRandom(seed + year + 100) - 0.5) * 0.02);
     
     futurePrice = futurePrice * (1 + yearGrowth);
     
-    // Confidence interval widens over time (Uncertainty cone)
-    // Year 1: +/- 3%, Year 10: +/- 15%
-    const uncertaintyFactor = 0.03 + (year * 0.012);
-    const uncertaintyAmount = futurePrice * uncertaintyFactor;
+    // Confidence Interval
+    const uncertainty = futurePrice * (0.02 * i); // 2% uncertainty per year into future
     
     forecast.push({
-      date: format(addMonths(today, year * 12), "yyyy"),
+      date: year.toString(),
+      year: year,
       price: Math.round(futurePrice),
-      lowerBound: Math.round(futurePrice - uncertaintyAmount),
-      upperBound: Math.round(futurePrice + uncertaintyAmount),
+      lowerBound: Math.round(futurePrice - uncertainty),
+      upperBound: Math.round(futurePrice + uncertainty),
     });
   }
 
@@ -179,10 +199,17 @@ export const generateMockData = (query: string): RealEstateData => {
     nearbyLocationName,
     currentPrice: Math.round(currentPrice),
     yoyGrowth,
-    transactions: 500 + Math.floor(Math.random() * 1000),
+    transactions: 500 + Math.floor(seededRandom(seed) * 2000),
     projectedGrowth5y: ((forecast[4].price - currentPrice) / currentPrice) * 100,
     projectedGrowth10y: ((forecast[9].price - currentPrice) / currentPrice) * 100,
-    history,
+    history: historyPoints,
     forecast,
   };
 };
+
+export const POPULAR_LOCATIONS = [
+  "Bandra West, Mumbai",
+  "Indiranagar, Bengaluru",
+  "Cyber City, Delhi NCR",
+  "Gachibowli, Hyderabad"
+];

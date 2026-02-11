@@ -1,16 +1,22 @@
-import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis, BarChart, Bar, Cell } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface PriceChartProps {
-  data: Array<{ date: string; price: number }>;
+  data: Array<{ year: number; price: number }>;
 }
 
 export function PriceChart({ data }: PriceChartProps) {
+  if (!data || data.length === 0) return (
+    <div className="h-[300px] w-full flex items-center justify-center text-slate-400 bg-slate-50 rounded-xl">
+      No historical data available
+    </div>
+  );
+
   return (
     <Card className="shadow-soft border-border/50">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold text-slate-800">1-Year Price Trend</CardTitle>
-        <CardDescription>Monthly average price per sq. ft.</CardDescription>
+        <CardTitle className="text-lg font-semibold text-slate-800">Historical Price Trend (10 Years)</CardTitle>
+        <CardDescription>Yearly average price per sq. ft.</CardDescription>
       </CardHeader>
       <CardContent>
         <div className="h-[300px] w-full">
@@ -24,7 +30,7 @@ export function PriceChart({ data }: PriceChartProps) {
               </defs>
               <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="hsl(220 13% 91%)" />
               <XAxis 
-                dataKey="date" 
+                dataKey="year" 
                 axisLine={false} 
                 tickLine={false} 
                 tick={{ fontSize: 12, fill: 'hsl(215 16% 47%)' }} 
@@ -34,12 +40,13 @@ export function PriceChart({ data }: PriceChartProps) {
                 axisLine={false} 
                 tickLine={false} 
                 tick={{ fontSize: 12, fill: 'hsl(215 16% 47%)' }} 
-                tickFormatter={(value) => `₹${value}`}
-                domain={['dataMin - 500', 'dataMax + 500']}
+                tickFormatter={(value) => `₹${(value/1000).toFixed(0)}k`}
+                domain={['dataMin - 1000', 'auto']}
               />
               <Tooltip 
                 contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 20px -2px rgba(0,0,0,0.1)' }}
-                formatter={(value: number) => [`₹${value.toLocaleString()}`, 'Price/sq.ft']}
+                formatter={(value: number) => [`₹${value.toLocaleString()}`, 'Avg. Price/sq.ft']}
+                labelFormatter={(label) => `Year: ${label}`}
               />
               <Area 
                 type="monotone" 
@@ -48,6 +55,7 @@ export function PriceChart({ data }: PriceChartProps) {
                 strokeWidth={3}
                 fillOpacity={1} 
                 fill="url(#colorPrice)" 
+                animationDuration={1500}
               />
             </AreaChart>
           </ResponsiveContainer>
