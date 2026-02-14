@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useRoute, useLocation } from "wouter";
 import { Navbar } from "@/components/Navbar";
-import { generateMockData, RealEstateData } from "@/lib/mockData";
+import { generateMockData, RealEstateData, PropertyType } from "@/lib/mockData";
 import { PriceChart } from "@/components/PriceChart";
 import { ForecastChart } from "@/components/ForecastChart";
 import { PriceHistoryTable } from "@/components/PriceHistoryTable";
@@ -10,7 +10,7 @@ import { MapView } from "@/components/MapView";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { MapPin, Info, AlertTriangle } from "lucide-react";
+import { MapPin, Info, AlertTriangle, Filter } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,9 @@ export default function Analysis() {
   const [loading, setLoading] = useState(true);
   const [_, setLocation] = useLocation();
   const [showFallbackDialog, setShowFallbackDialog] = useState(false);
+  
+  // Property Type State
+  const [propertyType, setPropertyType] = useState<PropertyType>("apartment");
 
   useEffect(() => {
     if (!match || !params?.location) {
@@ -35,14 +38,14 @@ export default function Analysis() {
       return;
     }
 
+    // Reset and Load
     setLoading(true);
-    setData(null); // Clear previous data to force re-render
+    setData(null);
 
-    // Simulate API fetch delay
     const timer = setTimeout(() => {
       try {
         const locationQuery = decodeURIComponent(params.location);
-        const mockData = generateMockData(locationQuery);
+        const mockData = generateMockData(locationQuery, propertyType);
         
         if (mockData) {
           setData(mockData);
@@ -50,17 +53,21 @@ export default function Analysis() {
             setShowFallbackDialog(true);
           }
         } else {
-          console.error("Failed to generate mock data");
+          console.error("Failed to generate data");
         }
       } catch (error) {
         console.error("Error generating data:", error);
       } finally {
         setLoading(false);
       }
-    }, 800);
+    }, 600); // Faster loading
 
     return () => clearTimeout(timer);
-  }, [match, params?.location]); // Depend on params.location explicitly
+  }, [match, params?.location, propertyType]); 
+
+  // Memoize charts to prevent unnecessary re-renders
+  const memoizedHistory = useMemo(() => data?.history, [data]);
+  const memoizedForecast = useMemo(() => data?.forecast, [data]);
 
   if (loading) {
     return <AnalysisSkeleton />;
@@ -71,7 +78,6 @@ export default function Analysis() {
       <div className="min-h-screen flex items-center justify-center flex-col gap-4 bg-slate-50">
         <AlertTriangle className="h-12 w-12 text-slate-300" />
         <h2 className="text-xl font-bold text-slate-700">Unable to load data</h2>
-        <p className="text-slate-500">We couldn't generate analytics for this location.</p>
         <Button onClick={() => setLocation("/")}>Search Another Location</Button>
       </div>
     );
@@ -81,7 +87,6 @@ export default function Analysis() {
     <div className="min-h-screen bg-slate-50/50">
       <Navbar />
       
-      {/* Fallback Notification Dialog */}
       <Dialog open={showFallbackDialog} onOpenChange={setShowFallbackDialog}>
         <DialogContent>
           <DialogHeader>
@@ -90,9 +95,7 @@ export default function Analysis() {
               Exact Location Data Not Found
             </DialogTitle>
             <DialogDescription className="pt-2">
-              We couldn't find sufficient data for <strong>{params?.location ? decodeURIComponent(params.location) : "your location"}</strong>. 
-              <br/><br/>
-              We are showing data for nearby <strong>{data.nearbyLocationName}</strong> instead.
+              Showing analytics for nearby <strong>{data.nearbyLocationName}</strong> instead.
             </DialogDescription>
           </DialogHeader>
           <div className="flex justify-end">
@@ -102,8 +105,8 @@ export default function Analysis() {
       </Dialog>
 
       <main className="container px-4 py-8 space-y-8">
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        {/* Header with Filters */}
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6">
           <div>
             <div className="flex items-center gap-2 text-slate-500 text-sm mb-1">
               <MapPin className="h-4 w-4" />
@@ -113,35 +116,44 @@ export default function Analysis() {
               <span>/</span>
               <span className="font-semibold text-slate-700">{data.area}</span>
             </div>
-            <h1 className="text-3xl font-display font-bold text-slate-900">{data.area}, {data.city}</h1>
-            <p className="text-slate-500 mt-1">Market analysis updated: Feb 2026</p>
+            <h1 className="text-3xl font-display font-bold text-slate-900">{data.area}</h1>
+            <p className="text-slate-500 mt-1">
+              Real estate insights for <span className="capitalize font-medium text-slate-700">{propertyType}s</span> • Updated Feb 2026
+            </p>
           </div>
           
-          <div className="flex items-center gap-3 flex-wrap">
-            <Select defaultValue="apartment">
-              <SelectTrigger className="w-[140px] bg-white">
-                <SelectValue placeholder="Property Type" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="apartment">Apartment</SelectItem>
-                <SelectItem value="villa">Villa</SelectItem>
-                <SelectItem value="plot">Plot</SelectItem>
-                <SelectItem value="commercial">Commercial</SelectItem>
-              </SelectContent>
-            </Select>
-            <Select defaultValue="buy">
-              <SelectTrigger className="w-[120px] bg-white">
-                <SelectValue placeholder="Transaction" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="buy">Buy</SelectItem>
-                <SelectItem value="rent">Rent</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="bg-white p-2 rounded-xl border border-slate-200 shadow-sm flex flex-col sm:flex-row gap-3">
+            <div className="flex items-center gap-2 px-2 border-r border-slate-100 pr-4">
+              <Filter className="h-4 w-4 text-slate-400" />
+              <span className="text-sm font-medium text-slate-600">Filters</span>
+            </div>
+            <div className="flex gap-2">
+              <Select value={propertyType} onValueChange={(v) => setPropertyType(v as PropertyType)}>
+                <SelectTrigger className="w-[140px] bg-slate-50 border-slate-200">
+                  <SelectValue placeholder="Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="apartment">Apartment</SelectItem>
+                  <SelectItem value="flat">Flat</SelectItem>
+                  <SelectItem value="villa">Villa</SelectItem>
+                  <SelectItem value="plot">Plot</SelectItem>
+                  <SelectItem value="commercial">Commercial</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <Select defaultValue="buy">
+                <SelectTrigger className="w-[120px] bg-slate-50 border-slate-200">
+                  <SelectValue placeholder="Action" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="buy">Buy</SelectItem>
+                  <SelectItem value="rent">Rent</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </div>
 
-        {/* Nearby Fallback Alert Banner */}
         {data.isNearbyFallback && (
           <Alert variant="default" className="bg-amber-50 border-amber-200">
             <Info className="h-4 w-4 text-amber-600" />
@@ -155,7 +167,7 @@ export default function Analysis() {
         <StatsGrid 
           currentPrice={data.currentPrice} 
           yoyGrowth={data.yoyGrowth}
-          projectedGrowth5y={data.projectedGrowth5y}
+          cagr5y={data.cagr5y}
           projectedGrowth10y={data.projectedGrowth10y}
         />
 
@@ -165,7 +177,7 @@ export default function Analysis() {
               <div className="flex items-center justify-between mb-4">
                 <TabsList className="grid w-[300px] grid-cols-2">
                   <TabsTrigger value="history">Historical Trend</TabsTrigger>
-                  <TabsTrigger value="forecast">Future Forecast</TabsTrigger>
+                  <TabsTrigger value="forecast">10Y Forecast</TabsTrigger>
                 </TabsList>
               </div>
               
@@ -175,23 +187,42 @@ export default function Analysis() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <PriceChart data={data.history} />
+                  <PriceChart data={memoizedHistory!} />
                 </motion.div>
                 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                   <PriceHistoryTable history={data.history} />
+                   <PriceHistoryTable history={memoizedHistory!} />
                    
-                   <div className="bg-white p-6 rounded-xl border border-slate-100 shadow-sm flex flex-col justify-center">
-                      <h3 className="font-semibold text-slate-800 mb-4">Market Sentiment</h3>
-                      <div className="flex items-center gap-4 mb-2">
-                        <div className="h-2 flex-1 bg-slate-100 rounded-full overflow-hidden">
-                          <div className="h-full w-[80%] bg-primary rounded-full"></div>
+                   <div className="space-y-4">
+                      <div className="bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
+                        <h3 className="font-semibold text-slate-800 mb-2">Investment Verdict</h3>
+                        <div className="flex items-baseline gap-2 mb-1">
+                          <span className="text-2xl font-bold text-primary">
+                            {data.cagr5y > 8 ? "Strong Buy" : data.cagr5y > 5 ? "Hold" : "Watch"}
+                          </span>
                         </div>
-                        <span className="font-bold text-primary">Bullish</span>
+                        <p className="text-sm text-slate-500">
+                          {data.cagr5y > 8 
+                            ? "High growth potential zone with robust historical returns." 
+                            : "Stable market with moderate appreciation expected."}
+                        </p>
                       </div>
-                      <p className="text-sm text-slate-500 mt-2">
-                        Prices in <strong>{data.area}</strong> have grown by {(data.yoyGrowth).toFixed(1)}% in the last year, outperforming the city average.
-                      </p>
+
+                      <div className="bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
+                        <h3 className="font-semibold text-slate-800 mb-2">Market Sentiment</h3>
+                        <div className="flex items-center gap-4 mb-2">
+                          <div className="h-2 flex-1 bg-slate-100 rounded-full overflow-hidden">
+                            <div 
+                              className="h-full bg-primary rounded-full transition-all duration-1000"
+                              style={{ width: `${Math.min(100, Math.max(0, 50 + data.yoyGrowth * 2))}%` }}
+                            ></div>
+                          </div>
+                          <span className="font-bold text-sm text-primary">
+                            {data.yoyGrowth > 5 ? "Bullish" : "Neutral"}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-400">Based on transaction volume and price momentum.</p>
+                      </div>
                    </div>
                 </div>
               </TabsContent>
@@ -202,13 +233,13 @@ export default function Analysis() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <ForecastChart data={data.forecast} />
+                  <ForecastChart data={memoizedForecast!} />
                 </motion.div>
 
                 <div className="bg-white p-6 rounded-xl border border-slate-100 shadow-sm">
-                  <h3 className="font-semibold text-slate-800 mb-4">Why invest in {data.area}?</h3>
+                  <h3 className="font-semibold text-slate-800 mb-4">Growth Drivers for {data.city}</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {['High Appreciation Potential', 'Upcoming Infrastructure', 'Rental Demand', 'Connectivity'].map((item, i) => (
+                    {['Metro Expansion', 'Commercial Hub Growth', 'Better Connectivity', 'Retail Development'].map((item, i) => (
                       <div key={i} className="flex items-center gap-2 text-sm text-slate-700 p-3 bg-slate-50 rounded-lg">
                         <div className="h-2 w-2 rounded-full bg-accent"></div>
                         {item}
@@ -234,8 +265,8 @@ export default function Analysis() {
                        <div className="font-medium text-slate-800">{data.city} Region</div>
                        <div className="text-slate-500">Locality</div>
                        <div className="font-medium text-slate-800">{data.area}</div>
-                       <div className="text-slate-500">Pincode</div>
-                       <div className="font-medium text-slate-800">400XXX</div>
+                       <div className="text-slate-500">Type</div>
+                       <div className="font-medium text-slate-800 capitalize">{data.propertyType}</div>
                     </div>
                  </div>
                </div>

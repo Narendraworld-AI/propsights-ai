@@ -1,4 +1,4 @@
-import { TrendingUp, TrendingDown, Building2, IndianRupee } from "lucide-react";
+import { TrendingUp, TrendingDown, Building2, IndianRupee, BarChart3, ArrowUpRight } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 
 interface StatCardProps {
@@ -39,43 +39,43 @@ function StatCard({ label, value, trend, icon: Icon, trendLabel }: StatCardProps
 export function StatsGrid({ 
   currentPrice, 
   yoyGrowth, 
-  projectedGrowth5y, 
+  cagr5y,
   projectedGrowth10y 
 }: { 
   currentPrice: number; 
   yoyGrowth: number; 
-  projectedGrowth5y: number; 
+  cagr5y: number; 
   projectedGrowth10y: number; 
 }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
       <StatCard 
-        label="Avg. Price / Sq.Ft" 
+        label="Current Price / Sq.Ft" 
         value={`₹${currentPrice.toLocaleString()}`}
         trend={yoyGrowth}
         icon={IndianRupee}
         trendLabel="vs. last year"
       />
       <StatCard 
-        label="YoY Growth" 
+        label="Annual Growth (YoY)" 
         value={`${yoyGrowth.toFixed(1)}%`}
         trend={yoyGrowth}
-        icon={TrendingUp}
-        trendLabel="Annual appreciation"
+        icon={BarChart3}
+        trendLabel="Last 12 months"
       />
       <StatCard 
-        label="5-Year Projection" 
-        value={`+${projectedGrowth5y.toFixed(0)}%`}
-        trend={projectedGrowth5y}
+        label="5-Year CAGR" 
+        value={`${cagr5y.toFixed(1)}%`}
+        trend={cagr5y}
         icon={Building2}
-        trendLabel="Estimated ROI"
+        trendLabel="Compounded annual growth"
       />
       <StatCard 
-        label="10-Year Outlook" 
+        label="10-Year Projection" 
         value={`+${projectedGrowth10y.toFixed(0)}%`}
         trend={projectedGrowth10y}
-        icon={TrendingUp}
-        trendLabel="Long term value"
+        icon={ArrowUpRight}
+        trendLabel="Forecasted appreciation"
       />
     </div>
   );
