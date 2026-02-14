@@ -254,7 +254,10 @@ export default function Analysis() {
           <div className="space-y-6">
             <div className="bg-white p-1 rounded-xl shadow-soft border border-border sticky top-24">
                <div className="relative">
-                 <MapView locationName={`${data.area}, ${data.city}`} />
+                 <MapView 
+                    locationName={`${data.area}, ${data.city}`} 
+                    onLocationSelect={(addr) => setLocation(`/analysis/${encodeURIComponent(addr)}`)}
+                 />
                  <div className="p-4 space-y-3">
                     <h4 className="font-semibold text-slate-900 flex items-center gap-2">
                       <MapPin className="h-4 w-4 text-primary" />

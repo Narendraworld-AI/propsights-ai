@@ -43,25 +43,67 @@ export function MapView({
     libraries,
   });
 
-  // Update map center when locationName changes
+  // Geocode the location name when it changes
   useEffect(() => {
-    if (!locationName) return;
+    if (!locationName || !isLoaded) return;
 
-    // 1. Try to parse our internal mock data first (faster, reliable for known list)
-    const { city, area } = parseLocation(locationName);
-    
-    // We use our mock geocoder first for instant "fake" accuracy consistent with our data
-    // In a real app with a real key, we would use the Geocoding service here.
-    const coords = getCoordinatesForLocation(city, area);
-    
-    setCenter(coords);
-    setMarkerPosition(coords);
-    
-    if (map) {
-      map.panTo(coords);
-      map.setZoom(14);
+    const geocodeLocation = async () => {
+      try {
+        const geocoder = new google.maps.Geocoder();
+        const response = await geocoder.geocode({ address: locationName });
+
+        if (response.results && response.results.length > 0) {
+          const { lat, lng } = response.results[0].geometry.location.toJSON();
+          const newPos = { lat, lng };
+          setCenter(newPos);
+          setMarkerPosition(newPos);
+          setMapError(null);
+        } else {
+          // Fallback if geocoding returns no results (or fails silently)
+          console.warn("Geocoding returned no results, using fallback.");
+          fallbackToMockData();
+        }
+      } catch (error) {
+        console.error("Geocoding failed:", error);
+        fallbackToMockData();
+      }
+    };
+
+    const fallbackToMockData = () => {
+      // Fallback to our internal mock data if API fails (e.g. invalid key)
+      const { city, area } = parseLocation(locationName);
+      const coords = getCoordinatesForLocation(city, area);
+      setCenter(coords);
+      setMarkerPosition(coords);
+    };
+
+    // Attempt geocoding
+    if (window.google && window.google.maps) {
+      geocodeLocation();
+    } else {
+      fallbackToMockData();
     }
-  }, [locationName, map]);
+  }, [locationName, isLoaded]);
+
+  const onMapClick = useCallback((e: google.maps.MapMouseEvent) => {
+    if (e.latLng && onLocationSelect) {
+      const lat = e.latLng.lat();
+      const lng = e.latLng.lng();
+      const newPos = { lat, lng };
+      
+      setMarkerPosition(newPos);
+      
+      // Reverse Geocode
+      const geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ location: newPos })
+        .then((response) => {
+          if (response.results[0]) {
+             onLocationSelect(response.results[0].formatted_address);
+          }
+        })
+        .catch((e) => console.error("Reverse geocode failed", e));
+    }
+  }, [onLocationSelect]);
 
   const onMapLoad = useCallback((map: google.maps.Map) => {
     setMap(map);
@@ -180,6 +222,7 @@ export function MapView({
         center={center}
         zoom={13}
         onLoad={onMapLoad}
+        onClick={onMapClick}
         options={{
           mapTypeControl: false,
           streetViewControl: false,
