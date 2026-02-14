@@ -81,8 +81,41 @@ export const INDIAN_CITIES = {
 
 // Search index optimization
 export const SEARCHABLE_LOCATIONS = Object.entries(INDIAN_CITIES).flatMap(([city, areas]) => 
-  areas.map(area => ({ city, area, label: `${area}, ${city}` }))
+  areas.map(area => ({ 
+    city, 
+    area, 
+    label: `${area}, ${city}`,
+    // Adding rough lat/lng for better default map positioning (Mock coordinates)
+    // In a real app, this would come from a database or Geocoding API
+    lat: 28.6139, 
+    lng: 77.2090
+  }))
 );
+
+// Helper to get rough coordinates based on city (Mocking geocoding for now to ensure map moves)
+export const getCoordinatesForLocation = (city: string, area: string) => {
+  const cityCoords: Record<string, { lat: number; lng: number }> = {
+    "Delhi NCR": { lat: 28.6139, lng: 77.2090 },
+    "Mumbai": { lat: 19.0760, lng: 72.8777 },
+    "Bengaluru": { lat: 12.9716, lng: 77.5946 },
+    "Hyderabad": { lat: 17.3850, lng: 78.4867 },
+    "Pune": { lat: 18.5204, lng: 73.8567 },
+    "Chennai": { lat: 13.0827, lng: 80.2707 },
+    "Kolkata": { lat: 22.5726, lng: 88.3639 },
+    "Ahmedabad": { lat: 23.0225, lng: 72.5714 }
+  };
+
+  const base = cityCoords[city] || cityCoords["Delhi NCR"];
+  // Add deterministic jitter based on area name to simulate different locations within city
+  const seed = area.split("").reduce((a, b) => a + b.charCodeAt(0), 0);
+  const latOffset = (seededRandom(seed) - 0.5) * 0.1;
+  const lngOffset = (seededRandom(seed + 1) - 0.5) * 0.1;
+
+  return {
+    lat: base.lat + latOffset,
+    lng: base.lng + lngOffset
+  };
+};
 
 // BASE PRICES PER CITY AND PROPERTY TYPE
 const BASE_PRICES: Record<string, number> = {
