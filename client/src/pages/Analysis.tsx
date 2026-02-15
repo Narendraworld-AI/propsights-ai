@@ -7,6 +7,8 @@ import { ForecastChart } from "@/components/ForecastChart";
 import { PriceHistoryTable } from "@/components/PriceHistoryTable";
 import { StatsGrid } from "@/components/StatsGrid";
 import { MapView } from "@/components/MapView";
+import { BuyerGuide } from "@/components/BuyerGuide";
+import { SellerGuide } from "@/components/SellerGuide";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -174,10 +176,12 @@ export default function Analysis() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="lg:col-span-2 space-y-6">
             <Tabs defaultValue="history" className="w-full">
-              <div className="flex items-center justify-between mb-4">
-                <TabsList className="grid w-[300px] grid-cols-2">
-                  <TabsTrigger value="history">Historical Trend</TabsTrigger>
-                  <TabsTrigger value="forecast">10Y Forecast</TabsTrigger>
+              <div className="flex items-center justify-between mb-4 overflow-x-auto">
+                <TabsList className="grid w-full min-w-[400px] grid-cols-4">
+                  <TabsTrigger value="history">Historical</TabsTrigger>
+                  <TabsTrigger value="forecast">Forecast</TabsTrigger>
+                  <TabsTrigger value="buyer">For Buyers</TabsTrigger>
+                  <TabsTrigger value="seller">For Sellers</TabsTrigger>
                 </TabsList>
               </div>
               
@@ -247,6 +251,26 @@ export default function Analysis() {
                     ))}
                   </div>
                 </div>
+              </TabsContent>
+
+              <TabsContent value="buyer" className="mt-0">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <BuyerGuide insights={data.buyerInsights} />
+                </motion.div>
+              </TabsContent>
+
+              <TabsContent value="seller" className="mt-0">
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <SellerGuide insights={data.sellerInsights} />
+                </motion.div>
               </TabsContent>
             </Tabs>
           </div>

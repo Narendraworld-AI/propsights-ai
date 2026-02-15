@@ -7,6 +7,25 @@ export interface YearlyDataPoint {
   price: number;
 }
 
+export interface BuyerInsight {
+  action: "Buy" | "Hold" | "Avoid";
+  riskLevel: "Low" | "Medium" | "High";
+  projectedAppreciation: number; // 5-year %
+  topSectors: string[];
+  undervalued: boolean;
+  rentalYield: number; // %
+  reasoning: string;
+}
+
+export interface SellerInsight {
+  suggestedAction: "Sell Now" | "Hold for 1 Year" | "Hold for 3+ Years";
+  marketHeat: "Cold" | "Warm" | "Hot";
+  demandTrend: "Falling" | "Stable" | "Rising";
+  estimatedPriceNextYear: number;
+  bestTimeToSell: string;
+  reasoning: string;
+}
+
 export interface RealEstateData {
   location: string;
   city: string;
@@ -30,6 +49,8 @@ export interface RealEstateData {
     conservative: number;
     aggressive: number;
   }>;
+  buyerInsights: BuyerInsight;
+  sellerInsights: SellerInsight;
 }
 
 // EXPANDED NCR & METRO DATA
@@ -283,6 +304,41 @@ export const generateMockData = (query: string, propertyType: PropertyType = "ap
     });
   }
 
+  const projectedGrowth5y = ((forecast[4].price - currentPrice) / currentPrice) * 100;
+  
+  // 5. Generate Buyer Insights
+  const buyerAction = projectedGrowth5y > 40 ? "Buy" : projectedGrowth5y > 20 ? "Hold" : "Avoid";
+  const riskLevel = seededRandom(seed + 10) > 0.6 ? "Medium" : seededRandom(seed + 10) > 0.3 ? "Low" : "High";
+  
+  const nearbySectors = SEARCHABLE_LOCATIONS
+    .filter(l => l.city === foundLocation.city && l.area !== foundLocation.area)
+    .slice(0, 3)
+    .map(l => l.area);
+
+  const buyerInsights: BuyerInsight = {
+    action: buyerAction,
+    riskLevel,
+    projectedAppreciation: projectedGrowth5y,
+    topSectors: nearbySectors,
+    undervalued: currentPrice < (cityBasePrice * typeMultiplier),
+    rentalYield: 2.5 + (seededRandom(seed + 20) * 1.5),
+    reasoning: `Based on 5-year CAGR of ${cagr5y.toFixed(1)}% and projected infrastructure growth, ${foundLocation.area} shows ${buyerAction === "Buy" ? "strong" : "moderate"} appreciation potential.`
+  };
+
+  // 6. Generate Seller Insights
+  const demandTrend = yoyGrowth > 8 ? "Rising" : yoyGrowth > 3 ? "Stable" : "Falling";
+  const marketHeat = yoyGrowth > 10 ? "Hot" : yoyGrowth > 5 ? "Warm" : "Cold";
+  const suggestedAction = marketHeat === "Hot" ? "Sell Now" : demandTrend === "Rising" ? "Hold for 1 Year" : "Hold for 3+ Years";
+
+  const sellerInsights: SellerInsight = {
+    suggestedAction,
+    marketHeat,
+    demandTrend,
+    estimatedPriceNextYear: Math.round(forecast[0].price),
+    bestTimeToSell: marketHeat === "Hot" ? "Immediate" : "Q3 2026",
+    reasoning: `Market heat is ${marketHeat} with ${demandTrend.toLowerCase()} demand. ${suggestedAction === "Sell Now" ? "Perfect time to exit." : "Wait for better valuations."}`
+  };
+
   const result = {
     location: isNearbyFallback ? query : foundLocation.label,
     city: foundLocation.city,
@@ -294,10 +350,12 @@ export const generateMockData = (query: string, propertyType: PropertyType = "ap
     yoyGrowth,
     cagr5y,
     transactions: 200 + Math.floor(seededRandom(seed) * 1500),
-    projectedGrowth5y: ((forecast[4].price - currentPrice) / currentPrice) * 100,
+    projectedGrowth5y,
     projectedGrowth10y: ((forecast[9].price - currentPrice) / currentPrice) * 100,
     history: historyPoints,
     forecast,
+    buyerInsights,
+    sellerInsights
   };
 
   CACHE.set(cacheKey, result);
