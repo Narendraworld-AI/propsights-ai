@@ -24,20 +24,32 @@ export function Navbar() {
               type="text" 
               placeholder="Search another location..." 
               className="bg-transparent border-none focus:outline-none text-sm w-64 text-slate-700 placeholder:text-slate-400"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  const target = (e.target as HTMLInputElement).value;
+                  if (target) window.location.href = `/analysis/${encodeURIComponent(target)}`;
+                }
+              }}
             />
           </div>
         )}
 
         <div className="flex items-center gap-4">
-          <button className="text-sm font-medium text-slate-600 hover:text-primary transition-colors">
-            For Buyers
-          </button>
-          <button className="text-sm font-medium text-slate-600 hover:text-primary transition-colors">
-            For Sellers
-          </button>
-          <button className="hidden sm:inline-flex bg-slate-900 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-slate-800 transition-colors">
-            Get App
-          </button>
+          <Link href="/buyers">
+            <a className={`text-sm font-medium transition-colors ${location === '/buyers' ? 'text-primary' : 'text-slate-600 hover:text-primary'}`}>
+              For Buyers
+            </a>
+          </Link>
+          <Link href="/sellers">
+            <a className={`text-sm font-medium transition-colors ${location === '/sellers' ? 'text-primary' : 'text-slate-600 hover:text-primary'}`}>
+              For Sellers
+            </a>
+          </Link>
+          <Link href="/coming-soon">
+            <a className="hidden sm:inline-flex bg-slate-900 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-slate-800 transition-colors">
+              Get App
+            </a>
+          </Link>
         </div>
       </div>
     </nav>
