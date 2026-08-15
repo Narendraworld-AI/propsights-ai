@@ -108,9 +108,9 @@ export function Hero() {
             </div>
 
             <div className="space-y-3">
-              <p className="text-sm font-medium text-slate-400 uppercase tracking-wider">Top Indian Metros</p>
+              <p className="text-sm font-medium text-slate-400 uppercase tracking-wider">Top Indian Metros & Growth Hubs</p>
               <div className="flex flex-wrap gap-2">
-                {['Delhi NCR', 'Mumbai', 'Bengaluru', 'Hyderabad', 'Pune', 'Chennai', 'Kolkata', 'Ahmedabad'].map((city) => (
+                {['Delhi NCR', 'Mumbai', 'Bengaluru', 'Hyderabad', 'Pune', 'Chennai', 'Indore', 'Bhopal', 'Ahmedabad', 'Kolkata'].map((city) => (
                   <button
                     key={city}
                     onClick={() => handleLocationSelect(`${city}`)}
