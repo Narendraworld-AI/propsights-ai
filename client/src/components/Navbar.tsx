@@ -1,54 +1,55 @@
 import { Link, useLocation } from "wouter";
-import { Search, MapPin } from "lucide-react";
+import { MapPin } from "lucide-react";
+import { LocationSelector } from "@/components/LocationSelector";
 
 export function Navbar() {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const isAnalysis = location.startsWith("/analysis");
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md dark:bg-slate-950/80">
-      <div className="container flex h-16 items-center justify-between px-4">
-        <Link href="/" className="flex items-center gap-2 cursor-pointer">
-          <div className="bg-primary rounded-lg p-1.5">
+    <nav className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/90 backdrop-blur-md">
+      <div className="container flex h-16 items-center justify-between px-4 gap-4">
+        <Link href="/" className="flex items-center gap-2 cursor-pointer shrink-0">
+          <div className="bg-primary rounded-lg p-1.5 shadow-xs">
             <MapPin className="h-5 w-5 text-white" />
           </div>
-          <span className="font-display text-xl font-bold tracking-tight text-slate-900 dark:text-white">
+          <span className="font-display text-xl font-bold tracking-tight text-slate-900">
             PropSight<span className="text-primary">.in</span>
           </span>
         </Link>
 
         {isAnalysis && (
-          <div className="hidden md:flex items-center bg-slate-100 rounded-full px-4 py-1.5 border border-slate-200">
-            <Search className="h-4 w-4 text-slate-400 mr-2" />
-            <input 
-              type="text" 
-              placeholder="Search another location..." 
-              className="bg-transparent border-none focus:outline-none text-sm w-64 text-slate-700 placeholder:text-slate-400"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  const target = (e.target as HTMLInputElement).value;
-                  if (target) window.location.href = `/analysis/${encodeURIComponent(target)}`;
-                }
-              }}
+          <div className="hidden md:flex items-center flex-1 max-w-xs">
+            <LocationSelector
+              onSelect={(val) => setLocation(`/analysis/${encodeURIComponent(val)}`)}
+              placeholder="Search another location..."
+              className="h-9 text-xs bg-slate-50 border-slate-200"
             />
           </div>
         )}
 
-        <div className="flex items-center gap-4">
-          <Link href="/buyers">
-            <a className={`text-sm font-medium transition-colors ${location === '/buyers' ? 'text-primary' : 'text-slate-600 hover:text-primary'}`}>
-              For Buyers
-            </a>
+        <div className="flex items-center gap-4 shrink-0">
+          <Link
+            href="/buyers"
+            className={`text-sm font-medium transition-colors ${
+              location === "/buyers" ? "text-primary font-semibold" : "text-slate-600 hover:text-primary"
+            }`}
+          >
+            For Buyers
           </Link>
-          <Link href="/sellers">
-            <a className={`text-sm font-medium transition-colors ${location === '/sellers' ? 'text-primary' : 'text-slate-600 hover:text-primary'}`}>
-              For Sellers
-            </a>
+          <Link
+            href="/sellers"
+            className={`text-sm font-medium transition-colors ${
+              location === "/sellers" ? "text-primary font-semibold" : "text-slate-600 hover:text-primary"
+            }`}
+          >
+            For Sellers
           </Link>
-          <Link href="/coming-soon">
-            <a className="hidden sm:inline-flex bg-slate-900 text-white px-4 py-2 rounded-full text-sm font-medium hover:bg-slate-800 transition-colors">
-              Get App
-            </a>
+          <Link
+            href="/coming-soon"
+            className="hidden sm:inline-flex bg-slate-900 text-white px-4 py-1.5 rounded-full text-sm font-medium hover:bg-slate-800 transition-colors shadow-2xs"
+          >
+            Get App
           </Link>
         </div>
       </div>

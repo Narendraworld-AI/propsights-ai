@@ -108,13 +108,13 @@ export function Hero() {
             </div>
 
             <div className="space-y-3">
-              <p className="text-sm font-medium text-slate-400 uppercase tracking-wider">Trending Cities</p>
+              <p className="text-sm font-medium text-slate-400 uppercase tracking-wider">Top Indian Metros</p>
               <div className="flex flex-wrap gap-2">
-                {['Mumbai', 'Bengaluru', 'Delhi NCR', 'Hyderabad'].map((city) => (
+                {['Delhi NCR', 'Mumbai', 'Bengaluru', 'Hyderabad', 'Pune', 'Chennai', 'Kolkata', 'Ahmedabad'].map((city) => (
                   <button
                     key={city}
-                    onClick={() => handleLocationSelect(`${city}`)} // Just searching the city name to find first match or fallback
-                    className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-sm text-slate-600 hover:border-primary hover:text-primary transition-colors shadow-sm"
+                    onClick={() => handleLocationSelect(`${city}`)}
+                    className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-sm font-medium text-slate-700 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all shadow-2xs"
                   >
                     {city}
                   </button>
