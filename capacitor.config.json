@@ -1,0 +1,12 @@
+{
+  "appId": "com.propsights.ai",
+  "appName": "PropSights AI",
+  "webDir": "dist/public",
+  "server": {
+    "androidScheme": "https",
+    "cleartext": true
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}
