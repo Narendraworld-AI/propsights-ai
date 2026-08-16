@@ -16,6 +16,7 @@ import { MapPin, Info, AlertTriangle, Filter } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { VerificationSources } from "@/components/VerificationSources";
 import {
   Dialog,
   DialogContent,
@@ -294,12 +295,21 @@ export default function Analysis() {
                        <div className="font-medium text-slate-800">{data.area}</div>
                        <div className="text-slate-500">Type</div>
                        <div className="font-medium text-slate-800 capitalize">{data.propertyType}</div>
-                    </div>
-                 </div>
-               </div>
-            </div>
+                     </div>
+                  </div>
+                </div>
+             </div>
           </div>
         </div>
+
+        {/* Verified Data Sources, Official Registry Address & Audit Certificate */}
+        <VerificationSources
+          location={data.location}
+          city={data.city}
+          area={data.area}
+          currentPrice={data.currentPrice}
+          propertyType={data.propertyType}
+        />
       </main>
     </div>
   );
