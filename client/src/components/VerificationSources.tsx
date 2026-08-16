@@ -11,9 +11,11 @@ import {
   Database, 
   Info,
   Calendar,
-  Lock
+  Lock,
+  Navigation,
+  BookOpen,
+  ArrowUpRight
 } from "lucide-react";
-import { motion } from "framer-motion";
 
 interface VerificationSourcesProps {
   location: string;
@@ -163,26 +165,34 @@ const INSTITUTIONAL_BENCHMARKS = [
   {
     name: "Reserve Bank of India (RBI)",
     report: "All-India House Price Index (HPI)",
+    url: "https://rbi.org.in/Scripts/BS_PressReleaseDisplay.aspx",
     coverage: "Official quarterly transaction index based on registered property transactions from official registries across Indian Tier-1 and Tier-2 metros.",
-    verifiedMetric: "Historical 12-Year Base Calibration"
+    verifiedMetric: "Historical 12-Year Base Calibration",
+    isClickable: true
   },
   {
     name: "Knight Frank India",
     report: "India Real Estate Market Assessment (Q4 2025 – Q1 2026)",
+    url: "https://www.knightfrank.co.in/research",
     coverage: "Sector-wise capital appreciation, weighted average per sq.ft valuations, inventory overhang, and luxury micro-market absorption data.",
-    verifiedMetric: "Prime Luxury & Sector Benchmarks"
+    verifiedMetric: "Prime Luxury & Sector Benchmarks",
+    isClickable: true
   },
   {
     name: "Anarock Property Consultants",
     report: "Anarock Residential Research Tracker (2025-2026)",
+    url: "https://anarock.com/research-insights",
     coverage: "Pan-India residential market intelligence, new launch price realizations, 5-year CAGR trends, and developer-quoted rates across 220+ sectors.",
-    verifiedMetric: "5-Year CAGR & Demand Trends"
+    verifiedMetric: "5-Year CAGR & Demand Trends",
+    isClickable: true
   },
   {
     name: "Magicbricks PropIndex & 99acres Insite",
     report: "Live Transaction Medians & Consumer Query Registries",
+    url: "https://www.magicbricks.com/propindex-pcr",
     coverage: "Aggregated buyer demand trends, micro-locality rental yield averages, and price spread distributions.",
-    verifiedMetric: "Rental Yield & Micro Locality Spreads"
+    verifiedMetric: "Rental Yield & Micro Locality Spreads",
+    isClickable: true
   }
 ];
 
@@ -194,11 +204,17 @@ export function VerificationSources({
   propertyType
 }: VerificationSourcesProps) {
   const authority = CITY_AUTHORITY_DIRECTORY[city] || CITY_AUTHORITY_DIRECTORY["Delhi NCR"];
+  
   const verificationHash = React.useMemo(() => {
     return `PROP-${city.substring(0, 3).toUpperCase()}-${Math.abs(
       (location + propertyType).split("").reduce((acc, char) => acc + char.charCodeAt(0), 10123)
     ).toString(16).toUpperCase()}-2026`;
   }, [location, city, propertyType]);
+
+  // Google Maps Search Query for the Sub-Registrar Office
+  const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    `${authority.registryName}, ${authority.officeAddress}`
+  )}`;
 
   return (
     <section className="bg-white rounded-2xl border border-slate-200/90 shadow-sm p-6 md:p-8 mt-8">
@@ -219,7 +235,7 @@ export function VerificationSources({
               </span>
             </div>
             <p className="text-sm text-slate-600 mt-1">
-              Pricing benchmarks shown for <strong className="text-slate-900">{area}, {city}</strong> (₹{currentPrice.toLocaleString("en-IN")}/sqft) are verified against statutory government land records, state RERA filings, and leading institutional real estate indices.
+              Pricing benchmarks shown for <strong className="text-slate-900">{area}, {city}</strong> (₹{currentPrice.toLocaleString("en-IN")}/sqft) are cross-referenced with statutory government land revenue records, state RERA portals, and accredited institutional indices. Click any reference below to inspect the actual source documents.
             </p>
           </div>
         </div>
@@ -247,77 +263,107 @@ export function VerificationSources({
               <div className="flex items-center gap-2">
                 <Building className="h-4 w-4 text-primary" />
                 <h4 className="font-bold text-slate-900 text-sm">
-                  1. Statutory Land Revenue & Sub-Registrar Authority
+                  1. Statutory Land Revenue & Sub-Registrar Office
                 </h4>
               </div>
               <span className="text-[11px] bg-primary/10 text-primary font-semibold px-2 py-0.5 rounded">
-                Official Government Record
+                Government Authority
               </span>
             </div>
 
             <p className="text-xs text-slate-600 mb-4">
-              Registered sale deed data, circle rate schedules, and stamp duty collections for <strong>{area}</strong> are maintained by:
+              Registered sale deed records, circle rate schedules, and stamp duty collections for <strong>{area}</strong> are maintained by:
             </p>
 
-            <div className="space-y-3 text-xs bg-white rounded-lg p-3.5 border border-slate-200/80 shadow-2xs">
+            <div className="space-y-3 text-xs bg-white rounded-lg p-4 border border-slate-200/80 shadow-2xs">
+              {/* Competent Authority */}
               <div>
                 <div className="text-slate-400 font-medium">Competent Authority:</div>
                 <div className="font-semibold text-slate-800 text-sm">{authority.registryName}</div>
                 <div className="text-slate-500">{authority.department}</div>
               </div>
 
-              <div className="pt-1 border-t border-slate-100">
-                <div className="text-slate-400 font-medium flex items-center gap-1">
-                  <MapPin className="h-3 w-3 text-red-500" /> Physical Jurisdiction & Registry Office Address:
+              {/* Physical Office Address with Google Maps redirection */}
+              <div className="pt-2 border-t border-slate-100">
+                <div className="text-slate-400 font-medium flex items-center justify-between">
+                  <span className="flex items-center gap-1">
+                    <MapPin className="h-3 w-3 text-red-500" /> Physical Jurisdiction Office Address:
+                  </span>
+                  <a
+                    href={googleMapsUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline font-semibold flex items-center gap-1 text-[11px]"
+                    title="View office location on Google Maps"
+                  >
+                    <Navigation className="h-3 w-3" />
+                    Open in Maps
+                    <ArrowUpRight className="h-3 w-3" />
+                  </a>
                 </div>
-                <div className="text-slate-700 font-medium mt-0.5">
+                <div className="text-slate-700 font-medium mt-1">
                   {authority.officeAddress} (PIN: {authority.pinCode})
                 </div>
               </div>
 
-              <div className="pt-1 border-t border-slate-100">
-                <div className="text-slate-400 font-medium">Local Sub-Registrar Tehsil/Office:</div>
+              {/* Local Sub-Registrar Tehsil */}
+              <div className="pt-2 border-t border-slate-100">
+                <div className="text-slate-400 font-medium">Local Sub-Registrar Tehsil/Branch:</div>
                 <div className="text-slate-800 font-semibold">{authority.localSubRegistrarOffice}</div>
               </div>
 
-              <div className="pt-1 border-t border-slate-100">
+              {/* Statutory Valuation Master */}
+              <div className="pt-2 border-t border-slate-100">
                 <div className="text-slate-400 font-medium">Statutory Valuation Schedule:</div>
                 <div className="text-slate-700 font-medium">{authority.circleRateSchedule}</div>
               </div>
 
-              <div className="pt-1 border-t border-slate-100">
+              {/* Real Estate Regulatory Authority */}
+              <div className="pt-2 border-t border-slate-100">
                 <div className="text-slate-400 font-medium">Real Estate Regulatory Authority (RERA):</div>
                 <div className="text-slate-800 font-semibold">{authority.reraAuthority}</div>
               </div>
             </div>
           </div>
 
+          {/* Clickable Quick Action Buttons */}
           <div className="flex flex-wrap gap-2 mt-4 pt-3 border-t border-slate-200/80">
             <a
               href={authority.portalUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-2xs hover:bg-primary/5 transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:text-primary-dark bg-white px-3 py-2 rounded-lg border border-slate-200 shadow-2xs hover:bg-primary/5 hover:border-primary/40 transition-all"
             >
               <Globe className="h-3.5 w-3.5 text-primary" />
               Visit {authority.portalName}
-              <ExternalLink className="h-3 w-3" />
+              <ExternalLink className="h-3 w-3 opacity-70" />
             </a>
 
             <a
               href={authority.reraPortal}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-primary hover:underline bg-white px-3 py-1.5 rounded-lg border border-slate-200 shadow-2xs hover:bg-primary/5 transition-colors"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-primary bg-white px-3 py-2 rounded-lg border border-slate-200 shadow-2xs hover:bg-primary/5 hover:border-primary/40 transition-all"
             >
               <FileText className="h-3.5 w-3.5 text-slate-500" />
-              Check RERA Projects & Filings
-              <ExternalLink className="h-3 w-3" />
+              Verify RERA Filings
+              <ExternalLink className="h-3 w-3 opacity-70" />
+            </a>
+
+            <a
+              href={googleMapsUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-700 hover:text-emerald-700 bg-white px-3 py-2 rounded-lg border border-slate-200 shadow-2xs hover:bg-emerald-50 hover:border-emerald-300 transition-all"
+            >
+              <MapPin className="h-3.5 w-3.5 text-emerald-600" />
+              Locate Sub-Registrar Office
+              <ArrowUpRight className="h-3 w-3 opacity-70" />
             </a>
           </div>
         </div>
 
-        {/* Right Column: Institutional Industry Benchmarks */}
+        {/* Right Column: Institutional Industry Benchmarks (with Clickable Research Links) */}
         <div className="bg-gradient-to-br from-slate-50 to-slate-100/50 rounded-xl p-5 border border-slate-200 flex flex-col justify-between">
           <div>
             <div className="flex items-center justify-between mb-3">
@@ -333,19 +379,37 @@ export function VerificationSources({
             </div>
 
             <p className="text-xs text-slate-600 mb-3">
-              Valuation estimates are cross-calibrated against verified quarterly published reports from accredited institutions:
+              Valuation estimates are cross-calibrated against verified published reports from accredited institutions. Click any report to view:
             </p>
 
             <div className="space-y-2.5">
               {INSTITUTIONAL_BENCHMARKS.map((item, index) => (
-                <div key={index} className="bg-white rounded-lg p-3 border border-slate-200/80 shadow-2xs">
+                <div 
+                  key={index} 
+                  className="bg-white rounded-lg p-3 border border-slate-200/80 shadow-2xs hover:border-primary/40 transition-colors group"
+                >
                   <div className="flex items-center justify-between mb-1">
                     <span className="font-bold text-xs text-slate-900">{item.name}</span>
                     <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
                       {item.verifiedMetric}
                     </span>
                   </div>
-                  <div className="text-xs font-medium text-primary mb-1">{item.report}</div>
+
+                  {item.isClickable ? (
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-xs font-semibold text-primary hover:underline flex items-center gap-1 mb-1 group-hover:text-primary-dark"
+                    >
+                      <BookOpen className="h-3 w-3" />
+                      {item.report}
+                      <ExternalLink className="h-3 w-3 opacity-60 group-hover:opacity-100" />
+                    </a>
+                  ) : (
+                    <div className="text-xs font-medium text-primary mb-1">{item.report}</div>
+                  )}
+
                   <p className="text-[11px] text-slate-500 leading-relaxed">{item.coverage}</p>
                 </div>
               ))}
@@ -360,7 +424,7 @@ export function VerificationSources({
         <div className="space-y-1">
           <div className="font-semibold text-slate-800">Methodology & Pricing Calculation Note:</div>
           <p className="leading-relaxed text-slate-600">
-            PropSights AI computes median capital rates (₹/sqft) by combining registered sale deed values from the respective State Land Revenue / Sub-Registrar offices with weighted transaction medians from RERA project filings, institutional research indices (Knight Frank & Anarock), and secondary market listings. Actual property prices may vary based on floor-rise, unit layout, builder brand, facing, and specific society amenities.
+            PropSights AI computes median capital rates (₹/sqft) by combining registered sale deed values from the respective State Land Revenue / Sub-Registrar offices with weighted transaction medians from RERA project filings, institutional research indices (Knight Frank, Anarock, RBI HPI), and secondary market listings. Actual property prices may vary based on floor-rise, unit layout, builder brand, facing, and specific society amenities.
           </p>
         </div>
       </div>
