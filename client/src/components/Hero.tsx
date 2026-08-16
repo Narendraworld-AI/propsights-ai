@@ -3,7 +3,6 @@ import { Navigation } from "lucide-react";
 import { useState } from "react";
 import { useLocation } from "wouter";
 import heroImage from "@/assets/hero-bg.png";
-import { POPULAR_LOCATIONS } from "@/lib/mockData";
 import { useToast } from "@/hooks/use-toast";
 import { LocationSelector } from "@/components/LocationSelector";
 
@@ -52,14 +51,14 @@ export function Hero() {
   };
 
   return (
-    <div className="relative overflow-hidden bg-slate-50 min-h-[calc(100vh-4rem)] flex items-center">
-      <div className="absolute inset-0 z-0 opacity-20 md:opacity-100 md:left-1/3 pointer-events-none">
+    <div className="relative overflow-hidden bg-slate-50 dark:bg-slate-950 min-h-[calc(100vh-4rem)] flex items-center transition-colors">
+      <div className="absolute inset-0 z-0 opacity-30 md:opacity-100 md:left-1/3 pointer-events-none">
         <img 
           src={heroImage} 
           alt="City Analytics" 
-          className="w-full h-full object-cover md:object-contain object-right-bottom mask-image-gradient"
+          className="w-full h-full object-cover md:object-contain object-right-bottom"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-50 via-slate-50/80 to-transparent md:via-slate-50/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-50 via-slate-50/80 to-transparent dark:from-slate-950 dark:via-slate-950/85 dark:to-transparent"></div>
       </div>
 
       <div className="container relative z-10 px-4 py-12 md:py-24">
@@ -77,17 +76,17 @@ export function Hero() {
               Live Real Estate Data 2025-2026
             </div>
             
-            <h1 className="text-4xl md:text-6xl font-display font-bold text-slate-900 leading-tight mb-6">
+            <h1 className="text-4xl md:text-6xl font-display font-bold text-slate-900 dark:text-white leading-tight mb-6">
               Real Estate Analytics <br/><span className="text-primary">Simplified.</span>
             </h1>
             
-            <p className="text-lg text-slate-600 mb-8 leading-relaxed max-w-lg">
+            <p className="text-lg text-slate-600 dark:text-slate-300 mb-8 leading-relaxed max-w-lg">
               Track price trends and get AI-powered 10-year forecasts for any locality in India.
             </p>
 
-            <div className="bg-white p-4 rounded-2xl shadow-xl border border-slate-100 max-w-lg mb-8">
+            <div className="bg-white dark:bg-slate-900 p-4 rounded-2xl shadow-xl dark:shadow-2xl border border-slate-100 dark:border-slate-800 max-w-lg mb-8 transition-colors">
               <div className="flex flex-col gap-3">
-                <label className="text-sm font-medium text-slate-700 ml-1">Select Location</label>
+                <label className="text-sm font-medium text-slate-700 dark:text-slate-300 ml-1">Select Location</label>
                 <div className="flex gap-2 w-full">
                    <div className="flex-1">
                      <LocationSelector onSelect={handleLocationSelect} placeholder="Search City, Area, Sector..." />
@@ -98,7 +97,7 @@ export function Hero() {
                    <button 
                     onClick={handleUseLocation}
                     disabled={isLocating}
-                    className="text-xs font-medium text-primary hover:underline flex items-center gap-1.5 transition-colors disabled:opacity-50"
+                    className="text-xs font-medium text-primary hover:underline flex items-center gap-1.5 transition-colors disabled:opacity-50 cursor-pointer"
                   >
                     <Navigation className={`h-3 w-3 ${isLocating ? 'animate-spin' : ''}`} />
                     {isLocating ? "Detecting location..." : "Use my current location"}
@@ -108,13 +107,13 @@ export function Hero() {
             </div>
 
             <div className="space-y-3">
-              <p className="text-sm font-medium text-slate-400 uppercase tracking-wider">Top Indian Metros & Growth Hubs</p>
+              <p className="text-sm font-medium text-slate-400 dark:text-slate-500 uppercase tracking-wider">Top Indian Metros & Growth Hubs</p>
               <div className="flex flex-wrap gap-2">
                 {['Delhi NCR', 'Mumbai', 'Bengaluru', 'Hyderabad', 'Pune', 'Chennai', 'Indore', 'Bhopal', 'Ahmedabad', 'Kolkata'].map((city) => (
                   <button
                     key={city}
                     onClick={() => handleLocationSelect(`${city}`)}
-                    className="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-sm font-medium text-slate-700 hover:border-primary hover:text-primary hover:bg-primary/5 transition-all shadow-2xs"
+                    className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-sm font-medium text-slate-700 dark:text-slate-200 hover:border-primary hover:text-primary dark:hover:border-primary dark:hover:text-primary hover:bg-primary/5 dark:hover:bg-primary/10 transition-all shadow-2xs cursor-pointer"
                   >
                     {city}
                   </button>

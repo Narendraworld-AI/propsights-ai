@@ -62,6 +62,45 @@
   --shadow-glow: 0 0 20px -5px rgba(59, 130, 246, 0.3);
 }
 
+.dark {
+  --color-background: hsl(224 71% 4%);
+  --color-foreground: hsl(210 20% 98%);
+  
+  --color-card: hsl(224 71% 7%);
+  --color-card-foreground: hsl(210 20% 98%);
+  
+  --color-popover: hsl(224 71% 7%);
+  --color-popover-foreground: hsl(210 20% 98%);
+  
+  --color-primary: hsl(217 91% 60%);
+  --color-primary-foreground: hsl(222 47% 11%);
+  
+  --color-secondary: hsl(215 27.9% 16.9%);
+  --color-secondary-foreground: hsl(210 20% 98%);
+  
+  --color-muted: hsl(215 27.9% 16.9%);
+  --color-muted-foreground: hsl(217.9 10.6% 64.9%);
+  
+  --color-accent: hsl(172 66% 50%);
+  --color-accent-foreground: hsl(210 20% 98%);
+  
+  --color-destructive: hsl(0 62.8% 30.6%);
+  --color-destructive-foreground: hsl(210 20% 98%);
+
+  --color-border: hsl(215 27.9% 16.9%);
+  --color-input: hsl(215 27.9% 16.9%);
+  --color-ring: hsl(217 91% 60%);
+  
+  --color-sidebar: hsl(224 71% 7%);
+  --color-sidebar-foreground: hsl(210 20% 98%);
+  --color-sidebar-primary: hsl(217 91% 60%);
+  --color-sidebar-primary-foreground: hsl(222 47% 11%);
+  --color-sidebar-accent: hsl(215 27.9% 16.9%);
+  --color-sidebar-accent-foreground: hsl(210 20% 98%);
+  --color-sidebar-border: hsl(215 27.9% 16.9%);
+  --color-sidebar-ring: hsl(217 91% 60%);
+}
+
 @layer base {
   * {
     @apply border-border;
