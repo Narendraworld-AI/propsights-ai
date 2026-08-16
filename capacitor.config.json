@@ -1,6 +1,6 @@
 {
   "appId": "com.propsights.ai",
-  "appName": "PropSights AI",
+  "appName": "PropSight India",
   "webDir": "dist/public",
   "server": {
     "androidScheme": "https",
@@ -8,5 +8,12 @@
   },
   "android": {
     "allowMixedContent": true
+  },
+  "plugins": {
+    "StatusBar": {
+      "overlaysWebView": false,
+      "style": "DARK",
+      "backgroundColor": "#FFFFFF"
+    }
   }
 }
