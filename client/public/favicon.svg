@@ -1,46 +1,50 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
   <defs>
-    <linearGradient id="pinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2563EB"/>
-      <stop offset="100%" stop-color="#1D4ED8"/>
+    <linearGradient id="tabBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563EB" />
+      <stop offset="100%" stop-color="#1D4ED8" />
     </linearGradient>
-    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
-      <feDropShadow dx="0" dy="12" stdDeviation="16" flood-color="#1E40AF" flood-opacity="0.25"/>
-    </filter>
+    <linearGradient id="trendLine" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#60A5FA" />
+      <stop offset="100%" stop-color="#93C5FD" />
+    </linearGradient>
   </defs>
 
-  <!-- Background clean container -->
-  <rect width="512" height="512" rx="112" fill="#FFFFFF"/>
+  <!-- Rounded Squircle Badge -->
+  <rect width="512" height="512" rx="120" fill="url(#tabBg)" />
 
-  <!-- Location Pin -->
-  <g filter="url(#shadow)">
-    <path d="M 256 64 C 160 64 88 136 88 232 C 88 338 232 448 256 448 C 280 448 424 338 424 232 C 424 136 352 64 256 64 Z" fill="url(#pinGrad)"/>
-  </g>
+  <!-- Buildings in crisp white -->
+  <g fill="#FFFFFF" transform="translate(146, 120)">
+    <!-- Central Tower -->
+    <path d="M 80 40 L 110 12 L 140 40 L 140 220 L 80 220 Z" />
+    <!-- Left Building -->
+    <rect x="24" y="80" width="46" height="140" rx="4" />
+    <!-- Right Building -->
+    <rect x="150" y="100" width="46" height="120" rx="4" />
+    <!-- Ground Platform -->
+    <rect x="10" y="214" width="200" height="16" rx="6" />
 
-  <!-- Inner Building Icon (White) -->
-  <g fill="#FFFFFF" transform="translate(156, 140)">
-    <!-- Central Main Tower -->
-    <path d="M 70 50 L 100 20 L 130 50 L 130 170 L 70 170 Z"/>
-    <!-- Left Wing Building -->
-    <rect x="25" y="80" width="40" height="90" rx="3"/>
-    <!-- Right Wing Building -->
-    <rect x="135" y="95" width="40" height="75" rx="3"/>
-    <!-- Base Platform -->
-    <rect x="15" y="170" width="170" height="12" rx="4"/>
+    <!-- Windows Tower (Blue Cutouts) -->
+    <rect x="94" y="60" width="14" height="20" rx="3" fill="#1D4ED8" />
+    <rect x="112" y="60" width="14" height="20" rx="3" fill="#1D4ED8" />
+    <rect x="94" y="96" width="14" height="20" rx="3" fill="#1D4ED8" />
+    <rect x="112" y="96" width="14" height="20" rx="3" fill="#1D4ED8" />
+    <rect x="94" y="132" width="14" height="20" rx="3" fill="#1D4ED8" />
+    <rect x="112" y="132" width="14" height="20" rx="3" fill="#1D4ED8" />
+    <rect x="100" y="174" width="20" height="40" rx="3" fill="#1D4ED8" />
 
-    <!-- Windows in Tower (Blue Cutouts) -->
-    <rect x="82" y="65" width="14" height="18" rx="2" fill="#2563EB"/>
-    <rect x="104" y="65" width="14" height="18" rx="2" fill="#2563EB"/>
-    <rect x="82" y="95" width="14" height="18" rx="2" fill="#2563EB"/>
-    <rect x="104" y="95" width="14" height="18" rx="2" fill="#2563EB"/>
-    <rect x="88" y="130" width="24" height="40" rx="3" fill="#2563EB"/>
+    <!-- Left Building Windows -->
+    <rect x="36" y="98" width="22" height="18" rx="2" fill="#1D4ED8" />
+    <rect x="36" y="130" width="22" height="18" rx="2" fill="#1D4ED8" />
+    <rect x="36" y="162" width="22" height="18" rx="2" fill="#1D4ED8" />
 
-    <!-- Windows in Left Wing -->
-    <rect x="35" y="95" width="18" height="16" rx="2" fill="#2563EB"/>
-    <rect x="35" y="125" width="18" height="16" rx="2" fill="#2563EB"/>
+    <!-- Right Building Windows -->
+    <rect x="162" y="118" width="22" height="18" rx="2" fill="#1D4ED8" />
+    <rect x="162" y="150" width="22" height="18" rx="2" fill="#1D4ED8" />
+    <rect x="162" y="182" width="22" height="18" rx="2" fill="#1D4ED8" />
 
-    <!-- Windows in Right Wing -->
-    <rect x="147" y="110" width="18" height="16" rx="2" fill="#2563EB"/>
-    <rect x="147" y="138" width="18" height="16" rx="2" fill="#2563EB"/>
+    <!-- Trend Arrow -->
+    <path d="M 20 60 L 90 20 L 150 48 L 205 10" stroke="url(#trendLine)" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+    <polygon points="205,10 185,12 198,25" fill="#93C5FD" />
   </g>
 </svg>
