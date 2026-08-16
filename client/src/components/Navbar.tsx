@@ -46,6 +46,16 @@ export function Navbar() {
             For Sellers
           </Link>
           <Link
+            href="/archive"
+            className={`text-sm font-medium transition-colors flex items-center gap-1 ${
+              location === "/archive" || location === "/documentation"
+                ? "text-primary font-semibold"
+                : "text-slate-600 hover:text-primary"
+            }`}
+          >
+            10-Yr Archive & Docs
+          </Link>
+          <Link
             href="/coming-soon"
             className="hidden sm:inline-flex bg-slate-900 text-white px-4 py-1.5 rounded-full text-sm font-medium hover:bg-slate-800 transition-colors shadow-2xs"
           >

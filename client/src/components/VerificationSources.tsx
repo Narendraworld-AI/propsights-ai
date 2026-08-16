@@ -419,14 +419,25 @@ export function VerificationSources({
       </div>
 
       {/* Methodology & Verification Protocol Note */}
-      <div className="bg-slate-50 rounded-xl p-4 border border-slate-200/80 flex items-start gap-3 text-xs text-slate-600">
-        <Info className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-        <div className="space-y-1">
-          <div className="font-semibold text-slate-800">Methodology & Pricing Calculation Note:</div>
-          <p className="leading-relaxed text-slate-600">
-            PropSights AI computes median capital rates (₹/sqft) by combining registered sale deed values from the respective State Land Revenue / Sub-Registrar offices with weighted transaction medians from RERA project filings, institutional research indices (Knight Frank, Anarock, RBI HPI), and secondary market listings. Actual property prices may vary based on floor-rise, unit layout, builder brand, facing, and specific society amenities.
-          </p>
+      <div className="bg-slate-50 rounded-xl p-4 border border-slate-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4 text-xs text-slate-600">
+        <div className="flex items-start gap-3">
+          <Info className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+          <div className="space-y-1">
+            <div className="font-semibold text-slate-800">Methodology & Pricing Calculation Note:</div>
+            <p className="leading-relaxed text-slate-600 max-w-2xl">
+              PropSights AI computes median capital rates (₹/sqft) by combining registered sale deed values from the respective State Land Revenue / Sub-Registrar offices with weighted transaction medians from RERA project filings, institutional research indices (Knight Frank, Anarock, RBI HPI), and secondary market listings.
+            </p>
+          </div>
         </div>
+
+        <a
+          href="/archive"
+          className="inline-flex items-center gap-1.5 font-bold text-xs bg-white text-primary hover:bg-primary/5 px-3.5 py-2 rounded-lg border border-primary/20 shadow-2xs shrink-0 self-start sm:self-center transition-all"
+        >
+          <BookOpen className="h-3.5 w-3.5" />
+          10-Yr Archive & Docs
+          <ArrowUpRight className="h-3 w-3" />
+        </a>
       </div>
     </section>
   );

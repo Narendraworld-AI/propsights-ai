@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/Navbar";
 import { Hero } from "@/components/Hero";
 import { METRO_CITIES, VERIFIED_AREA_DATA } from "@/lib/mockData";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import { ArrowRight, Building2, TrendingUp, ShieldCheck, BarChart3, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -152,6 +152,29 @@ export default function Home() {
                 Actionable recommendations with risk ratings, market heat index, and optimal transaction timing.
               </p>
             </div>
+          </div>
+
+          {/* 10-Year Archive & Documentation Highlight Box */}
+          <div className="mt-12 max-w-5xl mx-auto bg-gradient-to-r from-slate-900 to-slate-800 text-white rounded-3xl p-8 shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="space-y-2 max-w-2xl">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/20 text-primary-foreground text-xs font-semibold uppercase tracking-wider border border-primary/30">
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-400" />
+                Public Registry & Valuation Archive
+              </div>
+              <h3 className="text-2xl font-bold font-display text-white">
+                Looking for 10-Year Historical Data & Official Documentation?
+              </h3>
+              <p className="text-slate-300 text-sm leading-relaxed">
+                Inspect year-by-year price trajectories from 2015 to 2026, compare sectors side-by-side, export CSV archives, and access RERA statutory acts and RBI valuation methodologies.
+              </p>
+            </div>
+            <Link
+              href="/archive"
+              className="inline-flex items-center gap-2 bg-primary hover:bg-primary-dark text-white px-6 py-3 rounded-xl font-semibold text-sm shadow-md transition-all shrink-0 hover:translate-x-0.5"
+            >
+              Open 10-Yr Archive & Docs
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </div>
       </section>
