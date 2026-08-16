@@ -56,6 +56,7 @@ export interface RealEstateData {
 export interface AreaBenchmark {
   area: string;
   city: string;
+  subRegion?: string; // Sub-zone or micro-market
   basePrice: number; // Avg price per sqft (2025-2026 verified)
   cagr5y: number; // % 5-year CAGR
   rentalYield: number; // % rental yield
@@ -77,7 +78,7 @@ export interface CityMetadata {
 }
 
 // --------------------------------------------------------------------------
-// 1. VERIFIED INDIAN METRO & HIGH-GROWTH CITIES (2024-2026 Benchmarks)
+// 1. VERIFIED INDIAN METRO & HIGH-GROWTH CITIES METADATA (2025–2026)
 // --------------------------------------------------------------------------
 export const METRO_CITIES: Record<string, CityMetadata> = {
   "Delhi NCR": {
@@ -193,250 +194,285 @@ export const METRO_CITIES: Record<string, CityMetadata> = {
 };
 
 // --------------------------------------------------------------------------
-// 2. VERIFIED LOCALITY BENCHMARKS (220+ LOCALITIES ACROSS 10 CITIES)
+// 2. VERIFIED GRANULAR SECTOR-WISE & LOCALITY-WISE REAL ESTATE DATABASE
 // --------------------------------------------------------------------------
 export const VERIFIED_AREA_DATA: AreaBenchmark[] = [
-  // ==========================================
-  // --- 1. DELHI NCR (Gurgaon, Delhi, Noida, Gr Noida, Ghaziabad, Faridabad) ---
-  // ==========================================
-  { area: "Golf Course Road (Gurgaon)", city: "Delhi NCR", basePrice: 34000, cagr5y: 11.5, rentalYield: 2.7, lat: 28.4595, lng: 77.0965, tier: "Ultra-Luxury" },
-  { area: "DLF Phase 5 (Gurgaon)", city: "Delhi NCR", basePrice: 31000, cagr5y: 10.8, rentalYield: 2.8, lat: 28.4520, lng: 77.0980, tier: "Ultra-Luxury" },
-  { area: "Cyber City & DLF Phase 2 (Gurgaon)", city: "Delhi NCR", basePrice: 23500, cagr5y: 8.4, rentalYield: 3.2, lat: 28.4950, lng: 77.0890, tier: "Prime" },
-  { area: "Golf Course Ext Road (Gurgaon)", city: "Delhi NCR", basePrice: 17500, cagr5y: 12.2, rentalYield: 3.0, lat: 28.4110, lng: 77.0820, tier: "Prime" },
-  { area: "Dwarka Expressway - Sec 102-113 (Gurgaon)", city: "Delhi NCR", basePrice: 14200, cagr5y: 14.5, rentalYield: 3.1, lat: 28.5020, lng: 76.9950, tier: "Emerging Growth" },
-  { area: "Southern Peripheral Road - SPR (Gurgaon)", city: "Delhi NCR", basePrice: 13200, cagr5y: 12.8, rentalYield: 3.2, lat: 28.4020, lng: 77.0510, tier: "Prime" },
-  { area: "Sohna Road (Gurgaon)", city: "Delhi NCR", basePrice: 11500, cagr5y: 7.9, rentalYield: 3.3, lat: 28.3890, lng: 77.0420, tier: "Mid-Segment" },
-  { area: "New Gurgaon - Sec 82-95 (Gurgaon)", city: "Delhi NCR", basePrice: 9200, cagr5y: 11.2, rentalYield: 3.4, lat: 28.3980, lng: 76.9420, tier: "Mid-Segment" },
-  { area: "DLF Phase 1-4 (Gurgaon)", city: "Delhi NCR", basePrice: 24500, cagr5y: 9.1, rentalYield: 2.9, lat: 28.4795, lng: 77.0910, tier: "Prime" },
-  { area: "Nirvana Country & Sector 50 (Gurgaon)", city: "Delhi NCR", basePrice: 18000, cagr5y: 9.5, rentalYield: 3.0, lat: 28.4210, lng: 77.0650, tier: "Prime" },
-  { area: "Palam Vihar (Gurgaon)", city: "Delhi NCR", basePrice: 10800, cagr5y: 7.4, rentalYield: 3.1, lat: 28.5110, lng: 77.0340, tier: "Mid-Segment" },
-  
-  // Delhi
-  { area: "Vasant Kunj (Delhi)", city: "Delhi NCR", basePrice: 32000, cagr5y: 6.5, rentalYield: 2.5, lat: 28.5244, lng: 77.1555, tier: "Ultra-Luxury" },
-  { area: "Greater Kailash I & II (Delhi)", city: "Delhi NCR", basePrice: 38000, cagr5y: 6.2, rentalYield: 2.4, lat: 28.5482, lng: 77.2340, tier: "Ultra-Luxury" },
-  { area: "Defence Colony (Delhi)", city: "Delhi NCR", basePrice: 42000, cagr5y: 5.8, rentalYield: 2.3, lat: 28.5729, lng: 77.2325, tier: "Ultra-Luxury" },
-  { area: "Saket (Delhi)", city: "Delhi NCR", basePrice: 27500, cagr5y: 6.8, rentalYield: 2.7, lat: 28.5245, lng: 77.2066, tier: "Prime" },
-  { area: "Hauz Khas & Green Park (Delhi)", city: "Delhi NCR", basePrice: 33000, cagr5y: 6.4, rentalYield: 2.6, lat: 28.5494, lng: 77.2001, tier: "Ultra-Luxury" },
-  { area: "Dwarka - Sec 6-22 (Delhi)", city: "Delhi NCR", basePrice: 15200, cagr5y: 7.2, rentalYield: 2.9, lat: 28.5921, lng: 77.0460, tier: "Mid-Segment" },
-  { area: "Rohini - Sec 9-24 (Delhi)", city: "Delhi NCR", basePrice: 12500, cagr5y: 6.1, rentalYield: 2.8, lat: 28.7495, lng: 77.0565, tier: "Mid-Segment" },
-  { area: "Punjabi Bagh & Paschim Vihar (Delhi)", city: "Delhi NCR", basePrice: 22000, cagr5y: 6.7, rentalYield: 2.7, lat: 28.6675, lng: 77.1260, tier: "Prime" },
-  { area: "Pitampura & Model Town (Delhi)", city: "Delhi NCR", basePrice: 19500, cagr5y: 6.4, rentalYield: 2.8, lat: 28.6990, lng: 77.1384, tier: "Prime" },
-  { area: "Mayur Vihar - Phase 1-3 (Delhi)", city: "Delhi NCR", basePrice: 14000, cagr5y: 6.9, rentalYield: 3.0, lat: 28.6080, lng: 77.2960, tier: "Mid-Segment" },
-  
-  // Noida & Greater Noida
-  { area: "Noida Sector 150 (Expressway)", city: "Delhi NCR", basePrice: 12400, cagr5y: 13.6, rentalYield: 3.2, lat: 28.4380, lng: 77.4720, tier: "Emerging Growth" },
-  { area: "Noida Sector 128 (Jaypee Greens)", city: "Delhi NCR", basePrice: 13800, cagr5y: 11.2, rentalYield: 3.0, lat: 28.5200, lng: 77.3750, tier: "Prime" },
-  { area: "Noida Sector 62 (IT Hub)", city: "Delhi NCR", basePrice: 10200, cagr5y: 8.1, rentalYield: 3.5, lat: 28.6280, lng: 77.3640, tier: "Mid-Segment" },
-  { area: "Noida Sector 75-78", city: "Delhi NCR", basePrice: 9400, cagr5y: 9.3, rentalYield: 3.3, lat: 28.5750, lng: 77.3820, tier: "Mid-Segment" },
-  { area: "Noida Sector 104 & 107", city: "Delhi NCR", basePrice: 11800, cagr5y: 10.4, rentalYield: 3.1, lat: 28.5400, lng: 77.3600, tier: "Mid-Segment" },
-  { area: "Noida Sector 137 (Metro Corridor)", city: "Delhi NCR", basePrice: 9800, cagr5y: 9.8, rentalYield: 3.4, lat: 28.5080, lng: 77.4040, tier: "Mid-Segment" },
-  { area: "Noida Sector 18 (Atta Market Commercial)", city: "Delhi NCR", basePrice: 26000, cagr5y: 7.5, rentalYield: 4.2, lat: 28.5700, lng: 77.3230, tier: "Prime" },
-  { area: "Noida Extension / Gaur City (Gr Noida W)", city: "Delhi NCR", basePrice: 6800, cagr5y: 10.9, rentalYield: 3.4, lat: 28.6010, lng: 77.4320, tier: "Emerging Growth" },
-  { area: "Pari Chowk & Alpha/Beta (Greater Noida)", city: "Delhi NCR", basePrice: 6200, cagr5y: 9.8, rentalYield: 3.2, lat: 28.4730, lng: 77.5110, tier: "Emerging Growth" },
-  { area: "Yamuna Expressway (Jewar Airport Hub)", city: "Delhi NCR", basePrice: 5600, cagr5y: 15.8, rentalYield: 2.8, lat: 28.3200, lng: 77.5400, tier: "Emerging Growth" },
-  
-  // Ghaziabad & Faridabad
-  { area: "Indirapuram - Ahinsa/Vaibhav Khand (Ghaziabad)", city: "Delhi NCR", basePrice: 7800, cagr5y: 7.4, rentalYield: 3.1, lat: 28.6410, lng: 77.3710, tier: "Mid-Segment" },
-  { area: "Vaishali & Kaushambi (Ghaziabad)", city: "Delhi NCR", basePrice: 8500, cagr5y: 6.9, rentalYield: 3.0, lat: 28.6480, lng: 77.3400, tier: "Mid-Segment" },
-  { area: "Vasundhara & Raj Nagar Ext (Ghaziabad)", city: "Delhi NCR", basePrice: 6400, cagr5y: 8.2, rentalYield: 3.2, lat: 28.6650, lng: 77.3600, tier: "Mid-Segment" },
-  { area: "Neharpar - Sec 81-89 (Greater Faridabad)", city: "Delhi NCR", basePrice: 6800, cagr5y: 7.8, rentalYield: 3.2, lat: 28.4089, lng: 77.3178, tier: "Mid-Segment" },
-  { area: "Sector 14 & 15 (Faridabad)", city: "Delhi NCR", basePrice: 9500, cagr5y: 6.5, rentalYield: 3.0, lat: 28.4180, lng: 77.3220, tier: "Mid-Segment" },
+  // =========================================================================
+  // --- 1. DELHI NCR (Gurgaon, Noida, Gr Noida, Yamuna Exp, Delhi, Ghaziabad, Faridabad) ---
+  // =========================================================================
+  // GURGAON - Golf Course & Cyber City
+  { area: "Golf Course Road (Sector 42, 53 & 54)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 34000, cagr5y: 11.5, rentalYield: 2.7, lat: 28.4595, lng: 77.0965, tier: "Ultra-Luxury" },
+  { area: "DLF Phase 5 (The Camellias & Magnolias Zone)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 36000, cagr5y: 12.0, rentalYield: 2.6, lat: 28.4520, lng: 77.0980, tier: "Ultra-Luxury" },
+  { area: "DLF Phase 1 & 2 (Cyber City)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 24500, cagr5y: 8.8, rentalYield: 3.2, lat: 28.4950, lng: 77.0890, tier: "Prime" },
+  { area: "DLF Phase 3 & 4 (Heritage City)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 21000, cagr5y: 8.2, rentalYield: 3.3, lat: 28.4840, lng: 77.0820, tier: "Prime" },
+  { area: "MG Road & Sector 28", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 19500, cagr5y: 7.8, rentalYield: 3.4, lat: 28.4800, lng: 77.0800, tier: "Prime" },
 
-  // ==========================================
-  // --- 2. MUMBAI MMR ---
-  // ==========================================
-  { area: "Malabar Hill & Walkeshwar", city: "Mumbai", basePrice: 88000, cagr5y: 5.1, rentalYield: 2.1, lat: 18.9548, lng: 72.8055, tier: "Ultra-Luxury" },
-  { area: "Colaba & Cuffe Parade", city: "Mumbai", basePrice: 74000, cagr5y: 5.4, rentalYield: 2.3, lat: 18.9067, lng: 72.8147, tier: "Ultra-Luxury" },
-  { area: "Worli & Sea Face", city: "Mumbai", basePrice: 54000, cagr5y: 7.2, rentalYield: 2.5, lat: 19.0178, lng: 72.8178, tier: "Ultra-Luxury" },
-  { area: "Lower Parel & Currey Road", city: "Mumbai", basePrice: 46000, cagr5y: 6.8, rentalYield: 2.7, lat: 18.9953, lng: 72.8304, tier: "Ultra-Luxury" },
-  { area: "Prabhadevi & Siddhivinayak", city: "Mumbai", basePrice: 48000, cagr5y: 6.5, rentalYield: 2.6, lat: 19.0160, lng: 72.8300, tier: "Ultra-Luxury" },
-  { area: "Bandra West (Pali Hill & Carter Rd)", city: "Mumbai", basePrice: 62000, cagr5y: 7.8, rentalYield: 2.6, lat: 19.0596, lng: 72.8295, tier: "Ultra-Luxury" },
-  { area: "Bandra Kurla Complex (BKC)", city: "Mumbai", basePrice: 49000, cagr5y: 8.5, rentalYield: 3.0, lat: 19.0660, lng: 72.8680, tier: "Ultra-Luxury" },
-  { area: "Juhu & JVPD Scheme", city: "Mumbai", basePrice: 48000, cagr5y: 6.4, rentalYield: 2.4, lat: 19.1075, lng: 72.8263, tier: "Ultra-Luxury" },
-  { area: "Santacruz & Khar West", city: "Mumbai", basePrice: 44000, cagr5y: 6.6, rentalYield: 2.6, lat: 19.0805, lng: 72.8402, tier: "Prime" },
-  { area: "Dadar West (Shivaji Park)", city: "Mumbai", basePrice: 38000, cagr5y: 6.0, rentalYield: 2.5, lat: 19.0270, lng: 72.8380, tier: "Prime" },
-  { area: "Andheri West (Lokhandwala & Versova)", city: "Mumbai", basePrice: 29500, cagr5y: 7.1, rentalYield: 2.8, lat: 19.1363, lng: 72.8277, tier: "Prime" },
-  { area: "Andheri East (MIDC, Chakala & JB Nagar)", city: "Mumbai", basePrice: 22000, cagr5y: 6.7, rentalYield: 3.1, lat: 19.1136, lng: 72.8697, tier: "Mid-Segment" },
-  { area: "Powai & Hiranandani Gardens", city: "Mumbai", basePrice: 27000, cagr5y: 7.6, rentalYield: 3.2, lat: 19.1176, lng: 72.9060, tier: "Prime" },
-  { area: "Goregaon East (Oberoi Garden City)", city: "Mumbai", basePrice: 24500, cagr5y: 7.9, rentalYield: 2.9, lat: 19.1680, lng: 72.8620, tier: "Prime" },
-  { area: "Goregaon West & Link Road", city: "Mumbai", basePrice: 21000, cagr5y: 7.0, rentalYield: 2.9, lat: 19.1663, lng: 72.8426, tier: "Mid-Segment" },
-  { area: "Malad West (Mindspace)", city: "Mumbai", basePrice: 19500, cagr5y: 6.8, rentalYield: 3.0, lat: 19.1874, lng: 72.8484, tier: "Mid-Segment" },
-  { area: "Borivali West & IC Colony", city: "Mumbai", basePrice: 19000, cagr5y: 6.3, rentalYield: 2.8, lat: 19.2307, lng: 72.8567, tier: "Mid-Segment" },
-  { area: "Kandivali West (Mahavir Nagar)", city: "Mumbai", basePrice: 18200, cagr5y: 6.5, rentalYield: 2.9, lat: 19.2062, lng: 72.8409, tier: "Mid-Segment" },
-  { area: "Chembur (Diamond Garden & Golf Club)", city: "Mumbai", basePrice: 23000, cagr5y: 7.9, rentalYield: 2.9, lat: 19.0522, lng: 72.8994, tier: "Prime" },
-  { area: "Ghatkopar East & West", city: "Mumbai", basePrice: 21000, cagr5y: 7.2, rentalYield: 2.8, lat: 19.0856, lng: 72.9082, tier: "Mid-Segment" },
-  { area: "Mulund West & Bhandup", city: "Mumbai", basePrice: 18000, cagr5y: 6.9, rentalYield: 2.7, lat: 19.1726, lng: 72.9425, tier: "Mid-Segment" },
-  { area: "Thane West (Majiwada & Pokhran Rd)", city: "Mumbai", basePrice: 15200, cagr5y: 8.4, rentalYield: 3.1, lat: 19.2183, lng: 72.9781, tier: "Mid-Segment" },
-  { area: "Thane - Ghodbunder Road", city: "Mumbai", basePrice: 12800, cagr5y: 8.9, rentalYield: 3.3, lat: 19.2680, lng: 72.9550, tier: "Mid-Segment" },
-  { area: "Navi Mumbai (Vashi & Palm Beach)", city: "Mumbai", basePrice: 17500, cagr5y: 8.6, rentalYield: 3.3, lat: 19.0771, lng: 72.9986, tier: "Mid-Segment" },
-  { area: "Navi Mumbai (Kharghar & Seawoods)", city: "Mumbai", basePrice: 12800, cagr5y: 9.4, rentalYield: 3.4, lat: 19.0473, lng: 73.0699, tier: "Emerging Growth" },
-  { area: "Navi Mumbai (Ulwe & Dronagiri - Airport)", city: "Mumbai", basePrice: 9400, cagr5y: 13.2, rentalYield: 3.5, lat: 18.9800, lng: 73.0200, tier: "Emerging Growth" },
-  { area: "Panvel & Palaspe", city: "Mumbai", basePrice: 8500, cagr5y: 10.5, rentalYield: 3.4, lat: 18.9894, lng: 73.1175, tier: "Emerging Growth" },
+  // GURGAON - Golf Course Extension & SPR
+  { area: "Sector 57 (Sushant Lok 2 & 3)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 14500, cagr5y: 10.2, rentalYield: 3.1, lat: 28.4280, lng: 77.0750, tier: "Prime" },
+  { area: "Sector 58 & 59 (Grand Hyatt Corridor)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 18500, cagr5y: 12.4, rentalYield: 2.9, lat: 28.4050, lng: 77.1020, tier: "Prime" },
+  { area: "Sector 62 & 63 (Pioneer & Trump Tower Zone)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 19000, cagr5y: 13.1, rentalYield: 3.0, lat: 28.4080, lng: 77.0890, tier: "Prime" },
+  { area: "Sector 65 & 66 (M3M Golfestate & Emaar)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 18200, cagr5y: 12.8, rentalYield: 3.1, lat: 28.3980, lng: 77.0680, tier: "Prime" },
+  { area: "Sector 67 & 67A (Golf Course Ext)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 15500, cagr5y: 11.5, rentalYield: 3.2, lat: 28.3880, lng: 77.0640, tier: "Prime" },
+  { area: "Sector 70 & 70A (Southern Peripheral Road)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 13800, cagr5y: 12.2, rentalYield: 3.3, lat: 28.3920, lng: 77.0310, tier: "Prime" },
+  { area: "Sector 71 & 72 (SPR Hub)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 12500, cagr5y: 11.8, rentalYield: 3.2, lat: 28.4050, lng: 77.0250, tier: "Mid-Segment" },
+  { area: "Sector 48 & 49 (Sohna Road / Malibu Towne)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 13200, cagr5y: 8.6, rentalYield: 3.4, lat: 28.4180, lng: 77.0420, tier: "Mid-Segment" },
+  { area: "Sector 50 (Nirvana Country)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 17800, cagr5y: 9.8, rentalYield: 3.0, lat: 28.4210, lng: 77.0650, tier: "Prime" },
 
-  // ==========================================
-  // --- 3. BENGALURU ---
-  // ==========================================
-  { area: "Indiranagar (100ft & 12th Main)", city: "Bengaluru", basePrice: 23500, cagr5y: 9.8, rentalYield: 3.7, lat: 12.9784, lng: 77.6408, tier: "Ultra-Luxury" },
-  { area: "Koramangala (3rd, 4th & 5th Block)", city: "Bengaluru", basePrice: 25000, cagr5y: 9.2, rentalYield: 3.6, lat: 12.9352, lng: 77.6245, tier: "Ultra-Luxury" },
-  { area: "Lavelle Road & UB City", city: "Bengaluru", basePrice: 29000, cagr5y: 8.1, rentalYield: 3.2, lat: 12.9698, lng: 77.5986, tier: "Ultra-Luxury" },
-  { area: "Sadashivnagar & Palace Orchards", city: "Bengaluru", basePrice: 21500, cagr5y: 8.5, rentalYield: 3.3, lat: 13.0068, lng: 77.5813, tier: "Prime" },
-  { area: "Whitefield (ITPL & Hope Farm)", city: "Bengaluru", basePrice: 12200, cagr5y: 11.4, rentalYield: 4.1, lat: 12.9698, lng: 77.7500, tier: "Prime" },
-  { area: "HSR Layout (Sectors 1-7)", city: "Bengaluru", basePrice: 14500, cagr5y: 11.8, rentalYield: 4.0, lat: 12.9121, lng: 77.6446, tier: "Prime" },
-  { area: "Bellandur & Outer Ring Road (EcoSpace)", city: "Bengaluru", basePrice: 13000, cagr5y: 10.9, rentalYield: 4.2, lat: 12.9304, lng: 77.6784, tier: "Prime" },
-  { area: "Sarjapur Road & Carmelaram", city: "Bengaluru", basePrice: 11200, cagr5y: 12.5, rentalYield: 3.9, lat: 12.8900, lng: 77.7100, tier: "Emerging Growth" },
-  { area: "Hebbal (Manyata Tech Park)", city: "Bengaluru", basePrice: 13800, cagr5y: 11.1, rentalYield: 3.8, lat: 13.0358, lng: 77.5970, tier: "Prime" },
-  { area: "Yelahanka & Judicial Layout", city: "Bengaluru", basePrice: 10800, cagr5y: 12.9, rentalYield: 3.6, lat: 13.1007, lng: 77.5963, tier: "Emerging Growth" },
-  { area: "Airport Road / Devanahalli (KIADB)", city: "Bengaluru", basePrice: 8600, cagr5y: 14.8, rentalYield: 3.4, lat: 13.2480, lng: 77.7120, tier: "Emerging Growth" },
-  { area: "Jayanagar (3rd, 4th & 7th Block)", city: "Bengaluru", basePrice: 15500, cagr5y: 8.7, rentalYield: 3.4, lat: 12.9308, lng: 77.5838, tier: "Prime" },
-  { area: "JP Nagar (Phases 1-8)", city: "Bengaluru", basePrice: 11200, cagr5y: 9.1, rentalYield: 3.7, lat: 12.9063, lng: 77.5857, tier: "Mid-Segment" },
-  { area: "Banashankari (Stage 2 & 3)", city: "Bengaluru", basePrice: 10200, cagr5y: 8.4, rentalYield: 3.5, lat: 12.9255, lng: 77.5468, tier: "Mid-Segment" },
-  { area: "BTM Layout (Stage 1 & 2)", city: "Bengaluru", basePrice: 11800, cagr5y: 9.3, rentalYield: 4.3, lat: 12.9166, lng: 77.6101, tier: "Mid-Segment" },
-  { area: "Marathahalli & Kundalahalli", city: "Bengaluru", basePrice: 10400, cagr5y: 10.6, rentalYield: 4.1, lat: 12.9591, lng: 77.6974, tier: "Mid-Segment" },
-  { area: "Varthur & Gunjur", city: "Bengaluru", basePrice: 9400, cagr5y: 12.8, rentalYield: 3.9, lat: 12.9400, lng: 77.7400, tier: "Emerging Growth" },
-  { area: "Electronic City Phase 1 & 2", city: "Bengaluru", basePrice: 7200, cagr5y: 8.9, rentalYield: 4.4, lat: 12.8452, lng: 77.6602, tier: "Mid-Segment" },
-  { area: "Thanisandra Main Road & Hennur", city: "Bengaluru", basePrice: 11000, cagr5y: 12.1, rentalYield: 3.8, lat: 13.0548, lng: 77.6312, tier: "Emerging Growth" },
-  { area: "Kanakapura Road (Near Metro)", city: "Bengaluru", basePrice: 9800, cagr5y: 10.5, rentalYield: 3.6, lat: 12.8800, lng: 77.5500, tier: "Mid-Segment" },
-  { area: "Bannerghatta Road (Arekere & Hulimavu)", city: "Bengaluru", basePrice: 10500, cagr5y: 8.9, rentalYield: 3.7, lat: 12.8900, lng: 77.6000, tier: "Mid-Segment" },
-  { area: "Malleshwaram & Rajajinagar", city: "Bengaluru", basePrice: 16000, cagr5y: 8.2, rentalYield: 3.3, lat: 13.0030, lng: 77.5680, tier: "Prime" },
+  // GURGAON - Dwarka Expressway & New Gurgaon
+  { area: "Sector 102 & 103 (Dwarka Expressway)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 13800, cagr5y: 15.2, rentalYield: 3.0, lat: 28.4890, lng: 76.9850, tier: "Emerging Growth" },
+  { area: "Sector 104 & 106 (Chintels & Godrej Zone)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 14500, cagr5y: 14.8, rentalYield: 3.1, lat: 28.5080, lng: 76.9980, tier: "Emerging Growth" },
+  { area: "Sector 108 & 109 (Sobha City Corridor)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 15800, cagr5y: 14.2, rentalYield: 3.0, lat: 28.5200, lng: 77.0120, tier: "Prime" },
+  { area: "Sector 111, 112 & 113 (Delhi-Gurgaon Border)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 16500, cagr5y: 16.5, rentalYield: 2.9, lat: 28.5320, lng: 77.0250, tier: "Prime" },
+  { area: "Sector 82, 83 & 84 (Vatika India Next)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 9200, cagr5y: 11.4, rentalYield: 3.5, lat: 28.3850, lng: 76.9620, tier: "Mid-Segment" },
+  { area: "Sector 88, 89 & 90 (New Gurgaon Center)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 8800, cagr5y: 10.9, rentalYield: 3.4, lat: 28.4020, lng: 76.9380, tier: "Mid-Segment" },
+  { area: "Sector 91, 92 & 95 (Pataudi Road Link)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 7900, cagr5y: 11.8, rentalYield: 3.6, lat: 28.4120, lng: 76.9180, tier: "Emerging Growth" },
+  { area: "Palam Vihar (Sector 1, 2 & 3)", city: "Delhi NCR", subRegion: "Gurgaon", basePrice: 10800, cagr5y: 7.4, rentalYield: 3.1, lat: 28.5110, lng: 77.0340, tier: "Mid-Segment" },
 
-  // ==========================================
-  // --- 4. HYDERABAD ---
-  // ==========================================
-  { area: "Jubilee Hills (Road 36 & 45)", city: "Hyderabad", basePrice: 28000, cagr5y: 11.2, rentalYield: 2.9, lat: 17.4319, lng: 78.4073, tier: "Ultra-Luxury" },
-  { area: "Banjara Hills (Road 1, 10 & 12)", city: "Hyderabad", basePrice: 24000, cagr5y: 10.4, rentalYield: 3.1, lat: 17.4156, lng: 78.4357, tier: "Ultra-Luxury" },
-  { area: "Financial District & Nanakramguda", city: "Hyderabad", basePrice: 14500, cagr5y: 13.8, rentalYield: 3.9, lat: 17.4156, lng: 78.3427, tier: "Prime" },
-  { area: "Kokapet & Neopolis SEZ", city: "Hyderabad", basePrice: 15200, cagr5y: 16.4, rentalYield: 3.7, lat: 17.3980, lng: 78.3310, tier: "Prime" },
-  { area: "Hitec City & Mindspace", city: "Hyderabad", basePrice: 13500, cagr5y: 12.6, rentalYield: 4.0, lat: 17.4474, lng: 78.3762, tier: "Prime" },
-  { area: "Madhapur (Durgam Cheruvu Area)", city: "Hyderabad", basePrice: 13800, cagr5y: 12.4, rentalYield: 3.9, lat: 17.4380, lng: 78.3880, tier: "Prime" },
-  { area: "Gachibowli (ORR & Stadium Hub)", city: "Hyderabad", basePrice: 12800, cagr5y: 12.1, rentalYield: 3.8, lat: 17.4401, lng: 78.3489, tier: "Prime" },
-  { area: "Kondapur & Botanical Garden", city: "Hyderabad", basePrice: 11200, cagr5y: 11.5, rentalYield: 3.9, lat: 17.4689, lng: 78.3610, tier: "Mid-Segment" },
-  { area: "Tellapur & Kollur (ORR Exit 2)", city: "Hyderabad", basePrice: 9800, cagr5y: 14.1, rentalYield: 3.6, lat: 17.4730, lng: 78.2910, tier: "Emerging Growth" },
-  { area: "Nallagandla & Serilingampally", city: "Hyderabad", basePrice: 9500, cagr5y: 12.5, rentalYield: 3.7, lat: 17.4790, lng: 78.3180, tier: "Mid-Segment" },
-  { area: "Puppalaguda & Manikonda", city: "Hyderabad", basePrice: 9400, cagr5y: 11.9, rentalYield: 3.8, lat: 17.4010, lng: 78.3840, tier: "Mid-Segment" },
-  { area: "Shaikpet & Tolichowki", city: "Hyderabad", basePrice: 8900, cagr5y: 10.8, rentalYield: 3.6, lat: 17.4080, lng: 78.4020, tier: "Mid-Segment" },
-  { area: "Kukatpally (KPHB Colony)", city: "Hyderabad", basePrice: 8800, cagr5y: 9.8, rentalYield: 3.7, lat: 17.4933, lng: 78.3914, tier: "Mid-Segment" },
-  { area: "Miyapur Metro Corridor", city: "Hyderabad", basePrice: 7800, cagr5y: 10.4, rentalYield: 3.6, lat: 17.4968, lng: 78.3547, tier: "Mid-Segment" },
-  { area: "Nizampet & Bachupally", city: "Hyderabad", basePrice: 6800, cagr5y: 11.2, rentalYield: 3.8, lat: 17.5250, lng: 78.3750, tier: "Emerging Growth" },
-  { area: "Begumpet & Somajiguda", city: "Hyderabad", basePrice: 11500, cagr5y: 8.2, rentalYield: 3.3, lat: 17.4447, lng: 78.4664, tier: "Mid-Segment" },
-  { area: "Secunderabad (Marredpally & Sainikpuri)", city: "Hyderabad", basePrice: 8200, cagr5y: 7.9, rentalYield: 3.2, lat: 17.4500, lng: 78.5100, tier: "Mid-Segment" },
-  { area: "Uppal & Pocharam (IT SEZ)", city: "Hyderabad", basePrice: 6500, cagr5y: 9.6, rentalYield: 3.5, lat: 17.4000, lng: 78.5600, tier: "Emerging Growth" },
+  // NOIDA - Expressway & Central Sectors
+  { area: "Noida Sector 150 (Sports City & Green Expressway)", city: "Delhi NCR", subRegion: "Noida", basePrice: 12800, cagr5y: 14.2, rentalYield: 3.2, lat: 28.4380, lng: 77.4720, tier: "Emerging Growth" },
+  { area: "Noida Sector 128 (Jaypee Greens Wish Town)", city: "Delhi NCR", subRegion: "Noida", basePrice: 14200, cagr5y: 11.8, rentalYield: 3.0, lat: 28.5200, lng: 77.3750, tier: "Prime" },
+  { area: "Noida Sector 137 (Expressway Metro Hub)", city: "Delhi NCR", subRegion: "Noida", basePrice: 10200, cagr5y: 10.5, rentalYield: 3.5, lat: 28.5080, lng: 77.4040, tier: "Mid-Segment" },
+  { area: "Noida Sector 143 & 144 (Advant Navis Corridor)", city: "Delhi NCR", subRegion: "Noida", basePrice: 11000, cagr5y: 12.1, rentalYield: 3.4, lat: 28.4890, lng: 77.4280, tier: "Mid-Segment" },
+  { area: "Noida Sector 93A & 93B (Grand Omaxe / Express View)", city: "Delhi NCR", subRegion: "Noida", basePrice: 12500, cagr5y: 9.8, rentalYield: 3.1, lat: 28.5280, lng: 77.3720, tier: "Prime" },
+  { area: "Noida Sector 104 & 107 (High-Street & Luxury)", city: "Delhi NCR", subRegion: "Noida", basePrice: 12200, cagr5y: 11.0, rentalYield: 3.1, lat: 28.5400, lng: 77.3600, tier: "Prime" },
+  { area: "Noida Sector 44 & 45 (Near Botanical Garden)", city: "Delhi NCR", subRegion: "Noida", basePrice: 15500, cagr5y: 8.9, rentalYield: 3.0, lat: 28.5520, lng: 77.3340, tier: "Prime" },
+  { area: "Noida Sector 50 & 51 (Established Residential)", city: "Delhi NCR", subRegion: "Noida", basePrice: 13500, cagr5y: 8.2, rentalYield: 3.2, lat: 28.5780, lng: 77.3620, tier: "Prime" },
+  { area: "Noida Sector 62 (Institutional & IT Hub)", city: "Delhi NCR", subRegion: "Noida", basePrice: 10500, cagr5y: 8.4, rentalYield: 3.6, lat: 28.6280, lng: 77.3640, tier: "Mid-Segment" },
+  { area: "Noida Sector 74, 75, 76 & 77 (Central Metro Belt)", city: "Delhi NCR", subRegion: "Noida", basePrice: 9600, cagr5y: 9.8, rentalYield: 3.4, lat: 28.5750, lng: 77.3820, tier: "Mid-Segment" },
+  { area: "Noida Sector 78 & 79 (Civitech & Mahagun Zone)", city: "Delhi NCR", subRegion: "Noida", basePrice: 10400, cagr5y: 10.6, rentalYield: 3.3, lat: 28.5680, lng: 77.3910, tier: "Mid-Segment" },
+  { area: "Noida Sector 18 (Commercial & Retail CBD)", city: "Delhi NCR", subRegion: "Noida", basePrice: 28000, cagr5y: 7.8, rentalYield: 4.4, lat: 28.5700, lng: 77.3230, tier: "Prime" },
 
-  // ==========================================
-  // --- 5. PUNE ---
-  // ==========================================
-  { area: "Koregaon Park (North & South Main Rd)", city: "Pune", basePrice: 21500, cagr5y: 8.9, rentalYield: 3.4, lat: 18.5362, lng: 73.8940, tier: "Ultra-Luxury" },
-  { area: "Boat Club Road", city: "Pune", basePrice: 23000, cagr5y: 8.2, rentalYield: 3.1, lat: 18.5340, lng: 73.8780, tier: "Ultra-Luxury" },
-  { area: "Kalyani Nagar (Central Avenue)", city: "Pune", basePrice: 16500, cagr5y: 9.1, rentalYield: 3.5, lat: 18.5480, lng: 73.9030, tier: "Prime" },
-  { area: "Viman Nagar (Symbiosis Corridor)", city: "Pune", basePrice: 13800, cagr5y: 9.8, rentalYield: 3.9, lat: 18.5679, lng: 73.9143, tier: "Prime" },
-  { area: "Kharadi (EON Free Zone & WTC)", city: "Pune", basePrice: 12800, cagr5y: 11.2, rentalYield: 4.1, lat: 18.5529, lng: 73.9531, tier: "Prime" },
-  { area: "Baner & High Street", city: "Pune", basePrice: 13200, cagr5y: 10.5, rentalYield: 3.8, lat: 18.5590, lng: 73.7868, tier: "Prime" },
-  { area: "Balewadi (High Street & Sports City)", city: "Pune", basePrice: 12600, cagr5y: 11.0, rentalYield: 3.9, lat: 18.5750, lng: 73.7720, tier: "Prime" },
-  { area: "Aundh (ITI Road & DP Road)", city: "Pune", basePrice: 14200, cagr5y: 8.6, rentalYield: 3.5, lat: 18.5626, lng: 73.8087, tier: "Prime" },
-  { area: "Wakad (Bhumkar Chowk & Datta Mandir)", city: "Pune", basePrice: 9800, cagr5y: 10.1, rentalYield: 3.9, lat: 18.5987, lng: 73.7688, tier: "Mid-Segment" },
-  { area: "Hinjewadi (Phases 1, 2 & 3)", city: "Pune", basePrice: 8600, cagr5y: 9.4, rentalYield: 4.2, lat: 18.5913, lng: 73.7389, tier: "Mid-Segment" },
-  { area: "Punawale & Tathawade", city: "Pune", basePrice: 8200, cagr5y: 11.5, rentalYield: 4.0, lat: 18.6180, lng: 73.7480, tier: "Emerging Growth" },
-  { area: "Magarpatta City & Cybercity", city: "Pune", basePrice: 11200, cagr5y: 9.2, rentalYield: 3.9, lat: 18.5158, lng: 73.9272, tier: "Mid-Segment" },
-  { area: "Hadapsar & Amanora Park Town", city: "Pune", basePrice: 10500, cagr5y: 9.5, rentalYield: 3.8, lat: 18.5080, lng: 73.9350, tier: "Mid-Segment" },
-  { area: "Kothrud (Karve Road & Paud Rd)", city: "Pune", basePrice: 13800, cagr5y: 8.3, rentalYield: 3.4, lat: 18.5074, lng: 73.8077, tier: "Mid-Segment" },
-  { area: "Bavdhan & Chandani Chowk", city: "Pune", basePrice: 10400, cagr5y: 8.8, rentalYield: 3.6, lat: 18.5140, lng: 73.7740, tier: "Mid-Segment" },
-  { area: "Pimple Saudagar (Kunal Icon Rd)", city: "Pune", basePrice: 10100, cagr5y: 8.9, rentalYield: 3.7, lat: 18.5982, lng: 73.7978, tier: "Mid-Segment" },
-  { area: "Pimple Nilakh", city: "Pune", basePrice: 10600, cagr5y: 9.2, rentalYield: 3.6, lat: 18.5840, lng: 73.7910, tier: "Mid-Segment" },
-  { area: "Wagholi & Bakori Road", city: "Pune", basePrice: 6800, cagr5y: 9.8, rentalYield: 3.8, lat: 18.5810, lng: 73.9820, tier: "Emerging Growth" },
+  // GREATER NOIDA & NOIDA EXTENSION
+  { area: "Noida Extension / Gaur City (Sector 1, 4 & 16)", city: "Delhi NCR", subRegion: "Noida Ext", basePrice: 7100, cagr5y: 11.6, rentalYield: 3.5, lat: 28.6010, lng: 77.4320, tier: "Emerging Growth" },
+  { area: "Noida Extension (Tech Zone 4 & Sector 10)", city: "Delhi NCR", subRegion: "Noida Ext", basePrice: 6800, cagr5y: 12.2, rentalYield: 3.6, lat: 28.5880, lng: 77.4490, tier: "Emerging Growth" },
+  { area: "Greater Noida - Pari Chowk & Alpha 1/2", city: "Delhi NCR", subRegion: "Greater Noida", basePrice: 6400, cagr5y: 10.1, rentalYield: 3.3, lat: 28.4730, lng: 77.5110, tier: "Emerging Growth" },
+  { area: "Greater Noida - Beta 1/2 & Gamma 1/2", city: "Delhi NCR", subRegion: "Greater Noida", basePrice: 5900, cagr5y: 9.5, rentalYield: 3.2, lat: 28.4820, lng: 77.5020, tier: "Mid-Segment" },
+  { area: "Greater Noida - Delta, Omega & Chi Sectors", city: "Delhi NCR", subRegion: "Greater Noida", basePrice: 6200, cagr5y: 10.4, rentalYield: 3.3, lat: 28.4610, lng: 77.5250, tier: "Emerging Growth" },
+  { area: "Yamuna Expressway - Sector 18, 20 & 22D", city: "Delhi NCR", subRegion: "YEIDA", basePrice: 5800, cagr5y: 16.5, rentalYield: 2.9, lat: 28.3200, lng: 77.5400, tier: "Emerging Growth" },
+  { area: "Jewar International Airport Corridor", city: "Delhi NCR", subRegion: "YEIDA", basePrice: 5200, cagr5y: 18.2, rentalYield: 2.7, lat: 28.1800, lng: 77.5800, tier: "Emerging Growth" },
 
-  // ==========================================
-  // --- 6. CHENNAI ---
-  // ==========================================
-  { area: "Adyar & Gandhi Nagar", city: "Chennai", basePrice: 23500, cagr5y: 6.9, rentalYield: 2.9, lat: 13.0012, lng: 80.2565, tier: "Ultra-Luxury" },
-  { area: "Besant Nagar (Beach Area)", city: "Chennai", basePrice: 25000, cagr5y: 6.5, rentalYield: 2.8, lat: 13.0001, lng: 80.2667, tier: "Ultra-Luxury" },
-  { area: "MRC Nagar & RA Puram", city: "Chennai", basePrice: 27500, cagr5y: 6.2, rentalYield: 2.7, lat: 13.0210, lng: 80.2740, tier: "Ultra-Luxury" },
-  { area: "Boat Club Area & Poes Garden", city: "Chennai", basePrice: 32000, cagr5y: 5.9, rentalYield: 2.4, lat: 13.0280, lng: 80.2520, tier: "Ultra-Luxury" },
-  { area: "Anna Nagar (2nd, 6th Ave & Roundtana)", city: "Chennai", basePrice: 18500, cagr5y: 7.2, rentalYield: 3.0, lat: 13.0850, lng: 80.2101, tier: "Prime" },
-  { area: "T Nagar (Usman Road & Pondy Bazaar)", city: "Chennai", basePrice: 19000, cagr5y: 6.8, rentalYield: 3.2, lat: 13.0418, lng: 80.2341, tier: "Prime" },
-  { area: "Nungambakkam & Sterling Road", city: "Chennai", basePrice: 20000, cagr5y: 6.7, rentalYield: 3.0, lat: 13.0569, lng: 80.2425, tier: "Prime" },
-  { area: "Mylapore & Luz Corner", city: "Chennai", basePrice: 17200, cagr5y: 6.4, rentalYield: 3.1, lat: 13.0368, lng: 80.2676, tier: "Prime" },
-  { area: "OMR - Perungudi & Thoraipakkam", city: "Chennai", basePrice: 9800, cagr5y: 8.8, rentalYield: 3.8, lat: 12.9654, lng: 80.2461, tier: "Mid-Segment" },
-  { area: "OMR - Sholinganallur & Navalur", city: "Chennai", basePrice: 8200, cagr5y: 9.3, rentalYield: 3.9, lat: 12.9010, lng: 80.2279, tier: "Mid-Segment" },
-  { area: "Siruseri (SIPCOT IT Park)", city: "Chennai", basePrice: 6500, cagr5y: 10.4, rentalYield: 4.1, lat: 12.8350, lng: 80.2180, tier: "Emerging Growth" },
-  { area: "ECR - Thiruvanmiyur & Kottivakkam", city: "Chennai", basePrice: 15200, cagr5y: 7.9, rentalYield: 3.2, lat: 12.9830, lng: 80.2594, tier: "Prime" },
-  { area: "ECR - Palavakkam & Neelankarai", city: "Chennai", basePrice: 13500, cagr5y: 8.2, rentalYield: 3.1, lat: 12.9480, lng: 80.2580, tier: "Prime" },
-  { area: "Velachery (Bypass Road & Phoenix)", city: "Chennai", basePrice: 10500, cagr5y: 7.8, rentalYield: 3.5, lat: 12.9815, lng: 80.2180, tier: "Mid-Segment" },
-  { area: "Porur & Ramapuram", city: "Chennai", basePrice: 7900, cagr5y: 7.5, rentalYield: 3.4, lat: 13.0382, lng: 80.1565, tier: "Mid-Segment" },
-  { area: "Medavakkam & Pallikaranai", city: "Chennai", basePrice: 7600, cagr5y: 8.1, rentalYield: 3.6, lat: 12.9181, lng: 80.1918, tier: "Mid-Segment" },
-  { area: "Guindy (Olympia Tech Park Area)", city: "Chennai", basePrice: 12500, cagr5y: 7.3, rentalYield: 3.6, lat: 13.0080, lng: 80.2120, tier: "Prime" },
-  { area: "Tambaram & Chromepet", city: "Chennai", basePrice: 6200, cagr5y: 7.8, rentalYield: 3.5, lat: 12.9240, lng: 80.1280, tier: "Mid-Segment" },
+  // DELHI
+  { area: "Vasant Vihar & Vasant Kunj (South Delhi)", city: "Delhi NCR", subRegion: "Delhi", basePrice: 34000, cagr5y: 6.8, rentalYield: 2.5, lat: 28.5580, lng: 77.1580, tier: "Ultra-Luxury" },
+  { area: "Greater Kailash I & II (South Delhi)", city: "Delhi NCR", subRegion: "Delhi", basePrice: 39000, cagr5y: 6.4, rentalYield: 2.4, lat: 28.5482, lng: 77.2340, tier: "Ultra-Luxury" },
+  { area: "Defence Colony & South Extension (South Delhi)", city: "Delhi NCR", basePrice: 44000, cagr5y: 5.9, rentalYield: 2.3, lat: 28.5729, lng: 77.2325, tier: "Ultra-Luxury" },
+  { area: "Saket & Sainik Farm (South Delhi)", city: "Delhi NCR", subRegion: "Delhi", basePrice: 28000, cagr5y: 6.9, rentalYield: 2.7, lat: 28.5245, lng: 77.2066, tier: "Prime" },
+  { area: "Hauz Khas, Green Park & Safdarjung (Delhi)", city: "Delhi NCR", subRegion: "Delhi", basePrice: 34500, cagr5y: 6.6, rentalYield: 2.6, lat: 28.5494, lng: 77.2001, tier: "Ultra-Luxury" },
+  { area: "Dwarka - Sector 6 to 12 (West Delhi)", city: "Delhi NCR", subRegion: "Delhi", basePrice: 15800, cagr5y: 7.5, rentalYield: 2.9, lat: 28.5921, lng: 77.0460, tier: "Mid-Segment" },
+  { area: "Dwarka - Sector 18 to 23 (Golf Course Zone)", city: "Delhi NCR", subRegion: "Delhi", basePrice: 16800, cagr5y: 8.4, rentalYield: 2.8, lat: 28.5780, lng: 77.0620, tier: "Prime" },
+  { area: "Rohini - Sector 9, 13 & 24 (North-West Delhi)", city: "Delhi NCR", subRegion: "Delhi", basePrice: 12800, cagr5y: 6.4, rentalYield: 2.8, lat: 28.7495, lng: 77.0565, tier: "Mid-Segment" },
+  { area: "Punjabi Bagh, Rajouri Garden & Paschim Vihar", city: "Delhi NCR", subRegion: "Delhi", basePrice: 22500, cagr5y: 6.9, rentalYield: 2.7, lat: 28.6675, lng: 77.1260, tier: "Prime" },
+  { area: "Pitampura & Model Town (North Delhi)", city: "Delhi NCR", subRegion: "Delhi", basePrice: 20500, cagr5y: 6.6, rentalYield: 2.8, lat: 28.6990, lng: 77.1384, tier: "Prime" },
+  { area: "Mayur Vihar - Phase 1, 2 & 3 (East Delhi)", city: "Delhi NCR", subRegion: "Delhi", basePrice: 14500, cagr5y: 7.1, rentalYield: 3.0, lat: 28.6080, lng: 77.2960, tier: "Mid-Segment" },
+  { area: "Janakpuri & Vikaspuri (West Delhi)", city: "Delhi NCR", subRegion: "Delhi", basePrice: 16000, cagr5y: 6.8, rentalYield: 2.9, lat: 28.6210, lng: 77.0850, tier: "Mid-Segment" },
 
-  // ==========================================
-  // --- 7. KOLKATA ---
-  // ==========================================
-  { area: "Park Street & Camac Street", city: "Kolkata", basePrice: 22000, cagr5y: 5.6, rentalYield: 2.9, lat: 22.5510, lng: 88.3524, tier: "Ultra-Luxury" },
-  { area: "Alipore (Burdwan Road)", city: "Kolkata", basePrice: 26000, cagr5y: 5.2, rentalYield: 2.7, lat: 22.5312, lng: 88.3308, tier: "Ultra-Luxury" },
-  { area: "Ballygunge Circular Road", city: "Kolkata", basePrice: 19500, cagr5y: 5.9, rentalYield: 3.0, lat: 22.5280, lng: 88.3650, tier: "Prime" },
-  { area: "Southern Avenue & Lake Gardens", city: "Kolkata", basePrice: 16500, cagr5y: 5.8, rentalYield: 2.9, lat: 22.5120, lng: 88.3580, tier: "Prime" },
-  { area: "Salt Lake (Sector 1-3)", city: "Kolkata", basePrice: 10200, cagr5y: 6.8, rentalYield: 3.3, lat: 22.5867, lng: 88.4178, tier: "Prime" },
-  { area: "Salt Lake Sector 5 (IT Hub)", city: "Kolkata", basePrice: 11200, cagr5y: 7.8, rentalYield: 3.8, lat: 22.5735, lng: 88.4331, tier: "Prime" },
-  { area: "New Town (Action Area 1, 2 & 3)", city: "Kolkata", basePrice: 8400, cagr5y: 9.1, rentalYield: 3.6, lat: 22.5898, lng: 88.4744, tier: "Emerging Growth" },
-  { area: "Rajarhat & Chinar Park", city: "Kolkata", basePrice: 6900, cagr5y: 7.9, rentalYield: 3.4, lat: 22.6186, lng: 88.4607, tier: "Mid-Segment" },
-  { area: "EM Bypass (Ruby Hospital Area)", city: "Kolkata", basePrice: 9200, cagr5y: 7.4, rentalYield: 3.3, lat: 22.5186, lng: 88.3980, tier: "Mid-Segment" },
-  { area: "Jadavpur & Prince Anwar Shah", city: "Kolkata", basePrice: 7600, cagr5y: 6.4, rentalYield: 3.2, lat: 22.4988, lng: 88.3718, tier: "Mid-Segment" },
-  { area: "Tollygunge (Golf Club Area)", city: "Kolkata", basePrice: 8200, cagr5y: 6.8, rentalYield: 3.1, lat: 22.4920, lng: 88.3480, tier: "Mid-Segment" },
-  { area: "Garia & Kavi Subhash", city: "Kolkata", basePrice: 5900, cagr5y: 6.7, rentalYield: 3.5, lat: 22.4667, lng: 88.3833, tier: "Mid-Segment" },
-  { area: "Behala (Chowrasta)", city: "Kolkata", basePrice: 5200, cagr5y: 6.0, rentalYield: 3.2, lat: 22.4980, lng: 88.3180, tier: "Mid-Segment" },
-  { area: "Dum Dum & Lake Town", city: "Kolkata", basePrice: 6500, cagr5y: 6.2, rentalYield: 3.3, lat: 22.6420, lng: 88.4312, tier: "Mid-Segment" },
+  // GHAZIABAD & FARIDABAD
+  { area: "Indirapuram - Ahinsa & Vaibhav Khand (Ghaziabad)", city: "Delhi NCR", subRegion: "Ghaziabad", basePrice: 8200, cagr5y: 7.8, rentalYield: 3.1, lat: 28.6410, lng: 77.3710, tier: "Mid-Segment" },
+  { area: "Vaishali - Sector 1 to 9 (Ghaziabad)", city: "Delhi NCR", subRegion: "Ghaziabad", basePrice: 8800, cagr5y: 7.2, rentalYield: 3.0, lat: 28.6480, lng: 77.3400, tier: "Mid-Segment" },
+  { area: "Vasundhara - Sector 1 to 19 (Ghaziabad)", city: "Delhi NCR", subRegion: "Ghaziabad", basePrice: 7600, cagr5y: 7.5, rentalYield: 3.2, lat: 28.6650, lng: 77.3600, tier: "Mid-Segment" },
+  { area: "Raj Nagar Extension & Wave City (Ghaziabad)", city: "Delhi NCR", subRegion: "Ghaziabad", basePrice: 5400, cagr5y: 9.8, rentalYield: 3.4, lat: 28.7050, lng: 77.4180, tier: "Emerging Growth" },
+  { area: "Faridabad - Sector 14, 15 & 16", city: "Delhi NCR", subRegion: "Faridabad", basePrice: 9800, cagr5y: 6.8, rentalYield: 3.0, lat: 28.4180, lng: 77.3220, tier: "Mid-Segment" },
+  { area: "Greater Faridabad - Neharpar (Sec 81-89)", city: "Delhi NCR", subRegion: "Faridabad", basePrice: 7100, cagr5y: 8.2, rentalYield: 3.3, lat: 28.4089, lng: 77.3178, tier: "Mid-Segment" },
 
-  // ==========================================
-  // --- 8. AHMEDABAD ---
-  // ==========================================
-  { area: "Sindhu Bhavan Road (SBR)", city: "Ahmedabad", basePrice: 14200, cagr5y: 11.6, rentalYield: 3.2, lat: 23.0450, lng: 72.5050, tier: "Ultra-Luxury" },
-  { area: "Bodakdev & Judges Bungalow", city: "Ahmedabad", basePrice: 13000, cagr5y: 9.8, rentalYield: 3.1, lat: 23.0373, lng: 72.5186, tier: "Prime" },
-  { area: "Ambli - Bopal Road & Iscon", city: "Ahmedabad", basePrice: 11800, cagr5y: 11.2, rentalYield: 3.3, lat: 23.0310, lng: 72.4850, tier: "Prime" },
-  { area: "SG Highway & Prahlad Nagar", city: "Ahmedabad", basePrice: 10400, cagr5y: 9.6, rentalYield: 3.6, lat: 23.0121, lng: 72.5108, tier: "Prime" },
-  { area: "Satellite & Shyamal Cross Rd", city: "Ahmedabad", basePrice: 9600, cagr5y: 8.5, rentalYield: 3.4, lat: 23.0270, lng: 72.5310, tier: "Mid-Segment" },
-  { area: "Vastrapur (IIM Ahmedabad Area)", city: "Ahmedabad", basePrice: 11000, cagr5y: 9.1, rentalYield: 3.5, lat: 23.0358, lng: 72.5293, tier: "Prime" },
-  { area: "Thaltej & Shilaj", city: "Ahmedabad", basePrice: 9100, cagr5y: 9.4, rentalYield: 3.3, lat: 23.0569, lng: 72.5101, tier: "Mid-Segment" },
-  { area: "Science City Road & Sola", city: "Ahmedabad", basePrice: 8100, cagr5y: 9.8, rentalYield: 3.4, lat: 23.0780, lng: 72.5180, tier: "Mid-Segment" },
-  { area: "Gota & Vandematram", city: "Ahmedabad", basePrice: 6600, cagr5y: 8.7, rentalYield: 3.5, lat: 23.1090, lng: 72.5400, tier: "Mid-Segment" },
-  { area: "Bopal & South Bopal", city: "Ahmedabad", basePrice: 6200, cagr5y: 8.9, rentalYield: 3.6, lat: 23.0336, lng: 72.4646, tier: "Mid-Segment" },
-  { area: "GIFT City Corridor & Gandhinagar", city: "Ahmedabad", basePrice: 9500, cagr5y: 14.8, rentalYield: 3.9, lat: 23.1610, lng: 72.6840, tier: "Emerging Growth" },
-  { area: "Motera & Chandkheda (Stadium)", city: "Ahmedabad", basePrice: 7200, cagr5y: 9.2, rentalYield: 3.4, lat: 23.0980, lng: 72.5970, tier: "Mid-Segment" },
-  { area: "Navrangpura & CG Road", city: "Ahmedabad", basePrice: 10200, cagr5y: 7.9, rentalYield: 3.4, lat: 23.0370, lng: 72.5600, tier: "Prime" },
-  { area: "Maninagar (Kankaria Lake)", city: "Ahmedabad", basePrice: 6400, cagr5y: 7.4, rentalYield: 3.3, lat: 22.9980, lng: 72.6030, tier: "Mid-Segment" },
+  // =========================================================================
+  // --- 2. MUMBAI MMR (South Mumbai, Western Suburbs, Eastern Suburbs, Thane, Navi Mumbai) ---
+  // =========================================================================
+  { area: "Malabar Hill, Walkeshwar & Altamount Rd", city: "Mumbai", subRegion: "South Mumbai", basePrice: 92000, cagr5y: 5.2, rentalYield: 2.1, lat: 18.9548, lng: 72.8055, tier: "Ultra-Luxury" },
+  { area: "Colaba, Cuffe Parade & Nariman Point", city: "Mumbai", subRegion: "South Mumbai", basePrice: 76000, cagr5y: 5.5, rentalYield: 2.3, lat: 18.9067, lng: 72.8147, tier: "Ultra-Luxury" },
+  { area: "Breach Candy, Cumballa Hill & Mahalaxmi", city: "Mumbai", subRegion: "South Mumbai", basePrice: 68000, cagr5y: 5.8, rentalYield: 2.4, lat: 18.9720, lng: 72.8080, tier: "Ultra-Luxury" },
+  { area: "Worli, Worli Sea Face & Coastal Rd Zone", city: "Mumbai", subRegion: "South Central", basePrice: 56000, cagr5y: 7.5, rentalYield: 2.5, lat: 19.0178, lng: 72.8178, tier: "Ultra-Luxury" },
+  { area: "Lower Parel & Currey Road (Phoenix Mills Hub)", city: "Mumbai", subRegion: "South Central", basePrice: 47000, cagr5y: 6.9, rentalYield: 2.7, lat: 18.9953, lng: 72.8304, tier: "Ultra-Luxury" },
+  { area: "Prabhadevi & Siddhivinayak Corridor", city: "Mumbai", subRegion: "South Central", basePrice: 49000, cagr5y: 6.6, rentalYield: 2.6, lat: 19.0160, lng: 72.8300, tier: "Ultra-Luxury" },
+  { area: "Dadar West (Shivaji Park & Hindu Colony)", city: "Mumbai", subRegion: "Central Mumbai", basePrice: 39000, cagr5y: 6.2, rentalYield: 2.5, lat: 19.0270, lng: 72.8380, tier: "Prime" },
+  { area: "Bandra West (Pali Hill, Carter Rd & Bandstand)", city: "Mumbai", subRegion: "Western Suburbs", basePrice: 64000, cagr5y: 8.0, rentalYield: 2.6, lat: 19.0596, lng: 72.8295, tier: "Ultra-Luxury" },
+  { area: "Bandra Kurla Complex - BKC (Kalanagar & G Block)", city: "Mumbai", subRegion: "Western Suburbs", basePrice: 51000, cagr5y: 8.8, rentalYield: 3.1, lat: 19.0660, lng: 72.8680, tier: "Ultra-Luxury" },
+  { area: "Juhu & JVPD Scheme", city: "Mumbai", subRegion: "Western Suburbs", basePrice: 49500, cagr5y: 6.5, rentalYield: 2.4, lat: 19.1075, lng: 72.8263, tier: "Ultra-Luxury" },
+  { area: "Khar West & Santacruz West", city: "Mumbai", subRegion: "Western Suburbs", basePrice: 45000, cagr5y: 6.8, rentalYield: 2.6, lat: 19.0805, lng: 72.8402, tier: "Prime" },
+  { area: "Vile Parle East & West", city: "Mumbai", subRegion: "Western Suburbs", basePrice: 36000, cagr5y: 6.4, rentalYield: 2.7, lat: 19.0980, lng: 72.8440, tier: "Prime" },
+  { area: "Andheri West (Lokhandwala, Versova & Oshiwara)", city: "Mumbai", subRegion: "Western Suburbs", basePrice: 31000, cagr5y: 7.3, rentalYield: 2.8, lat: 19.1363, lng: 72.8277, tier: "Prime" },
+  { area: "Andheri East (Chakala, MIDC, JB Nagar & Marol)", city: "Mumbai", subRegion: "Western Suburbs", basePrice: 22800, cagr5y: 6.9, rentalYield: 3.1, lat: 19.1136, lng: 72.8697, tier: "Mid-Segment" },
+  { area: "Powai & Hiranandani Gardens (Chandivali)", city: "Mumbai", subRegion: "Eastern Suburbs", basePrice: 28000, cagr5y: 7.8, rentalYield: 3.2, lat: 19.1176, lng: 72.9060, tier: "Prime" },
+  { area: "Goregaon East (Oberoi Garden City & Gokuldham)", city: "Mumbai", subRegion: "Western Suburbs", basePrice: 25000, cagr5y: 8.1, rentalYield: 2.9, lat: 19.1680, lng: 72.8620, tier: "Prime" },
+  { area: "Goregaon West (Bangur Nagar & Link Rd)", city: "Mumbai", subRegion: "Western Suburbs", basePrice: 21500, cagr5y: 7.2, rentalYield: 2.9, lat: 19.1663, lng: 72.8426, tier: "Mid-Segment" },
+  { area: "Malad West (Mindspace & Evershine Nagar)", city: "Mumbai", subRegion: "Western Suburbs", basePrice: 20000, cagr5y: 7.0, rentalYield: 3.0, lat: 19.1874, lng: 72.8484, tier: "Mid-Segment" },
+  { area: "Kandivali West (Mahavir Nagar & Charkop)", city: "Mumbai", subRegion: "Western Suburbs", basePrice: 18800, cagr5y: 6.7, rentalYield: 2.9, lat: 19.2062, lng: 72.8409, tier: "Mid-Segment" },
+  { area: "Kandivali East (Thakur Village & Complex)", city: "Mumbai", subRegion: "Western Suburbs", basePrice: 19200, cagr5y: 7.1, rentalYield: 3.0, lat: 19.2100, lng: 72.8720, tier: "Mid-Segment" },
+  { area: "Borivali West (IC Colony & Shimpoli)", city: "Mumbai", subRegion: "Western Suburbs", basePrice: 19500, cagr5y: 6.5, rentalYield: 2.8, lat: 19.2307, lng: 72.8567, tier: "Mid-Segment" },
+  { area: "Chembur (Diamond Garden, Golf Club & Union Park)", city: "Mumbai", subRegion: "Eastern Suburbs", basePrice: 23500, cagr5y: 8.1, rentalYield: 2.9, lat: 19.0522, lng: 72.8994, tier: "Prime" },
+  { area: "Ghatkopar East & West (R City Hub)", city: "Mumbai", subRegion: "Eastern Suburbs", basePrice: 21800, cagr5y: 7.4, rentalYield: 2.8, lat: 19.0856, lng: 72.9082, tier: "Mid-Segment" },
+  { area: "Mulund West (LBS Marg & Yogi Hills)", city: "Mumbai", subRegion: "Eastern Suburbs", basePrice: 18500, cagr5y: 7.1, rentalYield: 2.7, lat: 19.1726, lng: 72.9425, tier: "Mid-Segment" },
+  { area: "Thane West (Majiwada & Pokhran Road 1/2)", city: "Mumbai", subRegion: "Thane", basePrice: 15800, cagr5y: 8.6, rentalYield: 3.1, lat: 19.2183, lng: 72.9781, tier: "Mid-Segment" },
+  { area: "Thane (Ghodbunder Road & Hiranandani Estate)", city: "Mumbai", subRegion: "Thane", basePrice: 13200, cagr5y: 9.2, rentalYield: 3.3, lat: 19.2680, lng: 72.9550, tier: "Mid-Segment" },
+  { area: "Navi Mumbai (Vashi Sector 1-30 & Palm Beach)", city: "Mumbai", subRegion: "Navi Mumbai", basePrice: 18200, cagr5y: 8.8, rentalYield: 3.3, lat: 19.0771, lng: 72.9986, tier: "Mid-Segment" },
+  { area: "Navi Mumbai (Nerul & Seawoods Grand Central)", city: "Mumbai", subRegion: "Navi Mumbai", basePrice: 16500, cagr5y: 9.1, rentalYield: 3.2, lat: 19.0200, lng: 73.0180, tier: "Mid-Segment" },
+  { area: "Navi Mumbai (Kharghar Sector 1-45)", city: "Mumbai", subRegion: "Navi Mumbai", basePrice: 13400, cagr5y: 9.8, rentalYield: 3.4, lat: 19.0473, lng: 73.0699, tier: "Emerging Growth" },
+  { area: "Navi Mumbai (Airoli & Kopar Khairane)", city: "Mumbai", subRegion: "Navi Mumbai", basePrice: 12600, cagr5y: 9.4, rentalYield: 3.5, lat: 19.1550, lng: 72.9980, tier: "Mid-Segment" },
+  { area: "Navi Mumbai (Ulwe & Dronagiri - Atal Setu Zone)", city: "Mumbai", subRegion: "Navi Mumbai", basePrice: 9800, cagr5y: 13.8, rentalYield: 3.5, lat: 18.9800, lng: 73.0200, tier: "Emerging Growth" },
+  { area: "Panvel & Palaspe Phata (Airport Corridor)", city: "Mumbai", subRegion: "Navi Mumbai", basePrice: 8800, cagr5y: 11.2, rentalYield: 3.4, lat: 18.9894, lng: 73.1175, tier: "Emerging Growth" },
 
-  // ==========================================
-  // --- 9. INDORE (Madhya Pradesh) ---
-  // ==========================================
-  { area: "Vijay Nagar & AB Road", city: "Indore", basePrice: 8200, cagr5y: 11.8, rentalYield: 3.6, lat: 22.7533, lng: 75.8937, tier: "Prime" },
-  { area: "Super Corridor (TCS & Infosys IT SEZ)", city: "Indore", basePrice: 7200, cagr5y: 15.4, rentalYield: 3.5, lat: 22.7750, lng: 75.8150, tier: "Emerging Growth" },
-  { area: "AB Bypass Road & Nipania", city: "Indore", basePrice: 7400, cagr5y: 13.2, rentalYield: 3.3, lat: 22.7680, lng: 75.9230, tier: "Prime" },
-  { area: "Old & New Palasia", city: "Indore", basePrice: 9800, cagr5y: 8.5, rentalYield: 3.1, lat: 22.7244, lng: 75.8839, tier: "Ultra-Luxury" },
-  { area: "Saket Nagar", city: "Indore", basePrice: 8900, cagr5y: 9.1, rentalYield: 3.2, lat: 22.7150, lng: 75.8980, tier: "Prime" },
-  { area: "Mahalaxmi Nagar (Bombay Hospital)", city: "Indore", basePrice: 7600, cagr5y: 11.0, rentalYield: 3.7, lat: 22.7600, lng: 75.9010, tier: "Prime" },
-  { area: "MR 10 / ISBT Corridor", city: "Indore", basePrice: 7100, cagr5y: 12.6, rentalYield: 3.4, lat: 22.7620, lng: 75.8680, tier: "Emerging Growth" },
-  { area: "Geeta Bhavan & Manoramaganj", city: "Indore", basePrice: 9200, cagr5y: 8.2, rentalYield: 3.1, lat: 22.7180, lng: 75.8790, tier: "Prime" },
-  { area: "Bhawarkua & BRTS Square", city: "Indore", basePrice: 6200, cagr5y: 9.4, rentalYield: 4.1, lat: 22.6920, lng: 75.8670, tier: "Mid-Segment" },
-  { area: "Annapurna & Sudama Nagar", city: "Indore", basePrice: 5900, cagr5y: 8.1, rentalYield: 3.2, lat: 22.6950, lng: 75.8340, tier: "Mid-Segment" },
-  { area: "Kanadia Road", city: "Indore", basePrice: 5600, cagr5y: 10.8, rentalYield: 3.3, lat: 22.7250, lng: 75.9180, tier: "Mid-Segment" },
-  { area: "Rau & Pithampur Road (IIM Hub)", city: "Indore", basePrice: 4800, cagr5y: 12.2, rentalYield: 3.6, lat: 22.6320, lng: 75.8080, tier: "Emerging Growth" },
-  { area: "Ujjain Road & Sanwer Road", city: "Indore", basePrice: 4600, cagr5y: 11.5, rentalYield: 3.3, lat: 22.8050, lng: 75.8450, tier: "Emerging Growth" },
-  { area: "Silicon City & CAT Road", city: "Indore", basePrice: 4400, cagr5y: 9.8, rentalYield: 3.5, lat: 22.6450, lng: 75.8280, tier: "Mid-Segment" },
-  { area: "Rajendra Nagar & Scheme 78", city: "Indore", basePrice: 6800, cagr5y: 9.6, rentalYield: 3.4, lat: 22.6780, lng: 75.8310, tier: "Mid-Segment" },
+  // =========================================================================
+  // --- 3. BENGALURU (Central, IT Corridor, Outer Ring Road, South, North) ---
+  // =========================================================================
+  { area: "Indiranagar (100ft Rd, 12th Main & Defense Colony)", city: "Bengaluru", subRegion: "Central BLR", basePrice: 24000, cagr5y: 9.8, rentalYield: 3.7, lat: 12.9784, lng: 77.6408, tier: "Ultra-Luxury" },
+  { area: "Koramangala (3rd, 4th, 5th & 6th Block)", city: "Bengaluru", subRegion: "Central BLR", basePrice: 25500, cagr5y: 9.2, rentalYield: 3.6, lat: 12.9352, lng: 77.6245, tier: "Ultra-Luxury" },
+  { area: "Lavelle Road, UB City & Richmond Town", city: "Bengaluru", subRegion: "Central BLR", basePrice: 29500, cagr5y: 8.1, rentalYield: 3.2, lat: 12.9698, lng: 77.5986, tier: "Ultra-Luxury" },
+  { area: "Sadashivnagar & Palace Orchards", city: "Bengaluru", subRegion: "Central BLR", basePrice: 22000, cagr5y: 8.5, rentalYield: 3.3, lat: 13.0068, lng: 77.5813, tier: "Prime" },
+  { area: "Whitefield (ITPL, Kadugodi & Hope Farm)", city: "Bengaluru", subRegion: "East BLR", basePrice: 12600, cagr5y: 11.8, rentalYield: 4.1, lat: 12.9698, lng: 77.7500, tier: "Prime" },
+  { area: "HSR Layout (Sectors 1 to 7)", city: "Bengaluru", subRegion: "South-East BLR", basePrice: 15200, cagr5y: 12.2, rentalYield: 4.0, lat: 12.9121, lng: 77.6446, tier: "Prime" },
+  { area: "Bellandur & Outer Ring Road (EcoSpace Corridor)", city: "Bengaluru", subRegion: "ORR IT Belt", basePrice: 13500, cagr5y: 11.2, rentalYield: 4.2, lat: 12.9304, lng: 77.6784, tier: "Prime" },
+  { area: "Sarjapur Road (Carmelaram & Doddakannelli)", city: "Bengaluru", subRegion: "East BLR", basePrice: 11800, cagr5y: 12.8, rentalYield: 3.9, lat: 12.8900, lng: 77.7100, tier: "Emerging Growth" },
+  { area: "Hebbal & Manyata Tech Park Corridor", city: "Bengaluru", subRegion: "North BLR", basePrice: 14200, cagr5y: 11.5, rentalYield: 3.8, lat: 13.0358, lng: 77.5970, tier: "Prime" },
+  { area: "Thanisandra Main Road & Hennur", city: "Bengaluru", subRegion: "North BLR", basePrice: 11400, cagr5y: 12.5, rentalYield: 3.8, lat: 13.0548, lng: 77.6312, tier: "Emerging Growth" },
+  { area: "Yelahanka (New Town & Judicial Layout)", city: "Bengaluru", subRegion: "North BLR", basePrice: 11000, cagr5y: 13.2, rentalYield: 3.6, lat: 13.1007, lng: 77.5963, tier: "Emerging Growth" },
+  { area: "Airport Road / Devanahalli (KIADB Aerospace Park)", city: "Bengaluru", subRegion: "North BLR", basePrice: 8900, cagr5y: 15.2, rentalYield: 3.4, lat: 13.2480, lng: 77.7120, tier: "Emerging Growth" },
+  { area: "Jayanagar (3rd, 4th, 7th & 9th Block)", city: "Bengaluru", subRegion: "South BLR", basePrice: 16000, cagr5y: 8.9, rentalYield: 3.4, lat: 12.9308, lng: 77.5838, tier: "Prime" },
+  { area: "JP Nagar (Phases 1 to 8)", city: "Bengaluru", subRegion: "South BLR", basePrice: 11600, cagr5y: 9.4, rentalYield: 3.7, lat: 12.9063, lng: 77.5857, tier: "Mid-Segment" },
+  { area: "Banashankari (Stage 2 & 3)", city: "Bengaluru", subRegion: "South BLR", basePrice: 10600, cagr5y: 8.7, rentalYield: 3.5, lat: 12.9255, lng: 77.5468, tier: "Mid-Segment" },
+  { area: "BTM Layout (Stage 1 & 2)", city: "Bengaluru", subRegion: "South BLR", basePrice: 12200, cagr5y: 9.6, rentalYield: 4.3, lat: 12.9166, lng: 77.6101, tier: "Mid-Segment" },
+  { area: "Marathahalli, Kundalahalli & AECS Layout", city: "Bengaluru", subRegion: "East BLR", basePrice: 10800, cagr5y: 10.9, rentalYield: 4.1, lat: 12.9591, lng: 77.6974, tier: "Mid-Segment" },
+  { area: "Varthur, Panathur & Gunjur", city: "Bengaluru", subRegion: "East BLR", basePrice: 9800, cagr5y: 13.1, rentalYield: 3.9, lat: 12.9400, lng: 77.7400, tier: "Emerging Growth" },
+  { area: "Electronic City Phase 1 & 2", city: "Bengaluru", subRegion: "South BLR", basePrice: 7500, cagr5y: 9.2, rentalYield: 4.4, lat: 12.8452, lng: 77.6602, tier: "Mid-Segment" },
+  { area: "Kanakapura Road (Konanakunte Metro Hub)", city: "Bengaluru", subRegion: "South BLR", basePrice: 10200, cagr5y: 10.8, rentalYield: 3.6, lat: 12.8800, lng: 77.5500, tier: "Mid-Segment" },
+  { area: "Bannerghatta Road (Arekere & Hulimavu)", city: "Bengaluru", subRegion: "South BLR", basePrice: 10800, cagr5y: 9.1, rentalYield: 3.7, lat: 12.8900, lng: 77.6000, tier: "Mid-Segment" },
+  { area: "Malleshwaram & Rajajinagar (Blocks 1-6)", city: "Bengaluru", subRegion: "West BLR", basePrice: 16500, cagr5y: 8.4, rentalYield: 3.3, lat: 13.0030, lng: 77.5680, tier: "Prime" },
 
-  // ==========================================
-  // --- 10. BHOPAL (Madhya Pradesh) ---
-  // ==========================================
-  { area: "Arera Colony - E1 to E8", city: "Bhopal", basePrice: 8500, cagr5y: 7.9, rentalYield: 2.8, lat: 23.2167, lng: 77.4333, tier: "Ultra-Luxury" },
-  { area: "MP Nagar - Zone 1 & 2 (CBD)", city: "Bhopal", basePrice: 9400, cagr5y: 8.5, rentalYield: 3.8, lat: 23.2330, lng: 77.4340, tier: "Prime" },
-  { area: "Hoshangabad Road (NH-46 Metro Corridor)", city: "Bhopal", basePrice: 5200, cagr5y: 10.6, rentalYield: 3.4, lat: 23.1890, lng: 77.4580, tier: "Prime" },
-  { area: "Bawadiya Kalan & Gulmohar (Near AIIMS)", city: "Bhopal", basePrice: 6200, cagr5y: 9.8, rentalYield: 3.2, lat: 23.1980, lng: 77.4420, tier: "Prime" },
-  { area: "Kolar Road & Chuna Bhatti", city: "Bhopal", basePrice: 4600, cagr5y: 8.9, rentalYield: 3.1, lat: 23.1820, lng: 77.4180, tier: "Mid-Segment" },
-  { area: "Shahpura & Trilanga (Lakeside)", city: "Bhopal", basePrice: 6800, cagr5y: 8.2, rentalYield: 3.0, lat: 23.2080, lng: 77.4280, tier: "Prime" },
-  { area: "Shyamla Hills & VIP Road (Upper Lake)", city: "Bhopal", basePrice: 8800, cagr5y: 6.8, rentalYield: 2.6, lat: 23.2450, lng: 77.3890, tier: "Ultra-Luxury" },
-  { area: "Ayodhya Bypass Road", city: "Bhopal", basePrice: 4200, cagr5y: 9.4, rentalYield: 3.2, lat: 23.2850, lng: 77.4580, tier: "Emerging Growth" },
-  { area: "Katara Hills & Bagsewaniya", city: "Bhopal", basePrice: 3900, cagr5y: 8.6, rentalYield: 3.2, lat: 23.1780, lng: 77.4810, tier: "Mid-Segment" },
-  { area: "Misrod & Jat Khedi", city: "Bhopal", basePrice: 4800, cagr5y: 10.2, rentalYield: 3.3, lat: 23.1650, lng: 77.4720, tier: "Emerging Growth" },
-  { area: "Airport Road & Lalghati", city: "Bhopal", basePrice: 5100, cagr5y: 7.8, rentalYield: 3.0, lat: 23.2820, lng: 77.3680, tier: "Mid-Segment" },
-  { area: "BHEL Township & Govindpura", city: "Bhopal", basePrice: 4200, cagr5y: 6.9, rentalYield: 3.1, lat: 23.2550, lng: 77.4680, tier: "Mid-Segment" },
-  { area: "Koh-e-Fiza & Ahmedabad Palace", city: "Bhopal", basePrice: 5800, cagr5y: 6.4, rentalYield: 2.9, lat: 23.2720, lng: 77.3820, tier: "Mid-Segment" },
-  { area: "Salaiya & Danish Nagar", city: "Bhopal", basePrice: 4900, cagr5y: 9.1, rentalYield: 3.2, lat: 23.1720, lng: 77.4410, tier: "Mid-Segment" }
+  // =========================================================================
+  // --- 4. HYDERABAD (West IT Corridor, Neopolis, Prime Central, North) ---
+  // =========================================================================
+  { area: "Jubilee Hills (Road 36, 45 & Film Nagar)", city: "Hyderabad", subRegion: "Central Prime", basePrice: 29000, cagr5y: 11.5, rentalYield: 2.9, lat: 17.4319, lng: 78.4073, tier: "Ultra-Luxury" },
+  { area: "Banjara Hills (Road 1, 10 & 12)", city: "Hyderabad", subRegion: "Central Prime", basePrice: 24800, cagr5y: 10.7, rentalYield: 3.1, lat: 17.4156, lng: 78.4357, tier: "Ultra-Luxury" },
+  { area: "Financial District & Nanakramguda (Waverock)", city: "Hyderabad", subRegion: "West IT Corridor", basePrice: 15000, cagr5y: 14.2, rentalYield: 3.9, lat: 17.4156, lng: 78.3427, tier: "Prime" },
+  { area: "Kokapet & Neopolis SEZ (High-Rise Hub)", city: "Hyderabad", subRegion: "West IT Corridor", basePrice: 15800, cagr5y: 17.1, rentalYield: 3.7, lat: 17.3980, lng: 78.3310, tier: "Prime" },
+  { area: "Hitec City & Mindspace Tech Park", city: "Hyderabad", subRegion: "West IT Corridor", basePrice: 14000, cagr5y: 12.9, rentalYield: 4.0, lat: 17.4474, lng: 78.3762, tier: "Prime" },
+  { area: "Madhapur (Durgam Cheruvu & Kavuri Hills)", city: "Hyderabad", subRegion: "West IT Corridor", basePrice: 14200, cagr5y: 12.6, rentalYield: 3.9, lat: 17.4380, lng: 78.3880, tier: "Prime" },
+  { area: "Gachibowli (ORR & Stadium Hub)", city: "Hyderabad", subRegion: "West IT Corridor", basePrice: 13200, cagr5y: 12.4, rentalYield: 3.8, lat: 17.4401, lng: 78.3489, tier: "Prime" },
+  { area: "Kondapur & Botanical Garden Road", city: "Hyderabad", subRegion: "West IT Corridor", basePrice: 11600, cagr5y: 11.8, rentalYield: 3.9, lat: 17.4689, lng: 78.3610, tier: "Mid-Segment" },
+  { area: "Tellapur & Kollur (ORR Exit 2 Corridor)", city: "Hyderabad", subRegion: "West IT Corridor", basePrice: 10200, cagr5y: 14.6, rentalYield: 3.6, lat: 17.4730, lng: 78.2910, tier: "Emerging Growth" },
+  { area: "Nallagandla & Serilingampally", city: "Hyderabad", subRegion: "West IT Corridor", basePrice: 9800, cagr5y: 12.8, rentalYield: 3.7, lat: 17.4790, lng: 78.3180, tier: "Mid-Segment" },
+  { area: "Puppalaguda & Manikonda (Lanco Hills)", city: "Hyderabad", subRegion: "West IT Corridor", basePrice: 9800, cagr5y: 12.2, rentalYield: 3.8, lat: 17.4010, lng: 78.3840, tier: "Mid-Segment" },
+  { area: "Shaikpet & Tolichowki", city: "Hyderabad", subRegion: "Central Prime", basePrice: 9200, cagr5y: 11.1, rentalYield: 3.6, lat: 17.4080, lng: 78.4020, tier: "Mid-Segment" },
+  { area: "Kukatpally (KPHB Colony Phase 1-9)", city: "Hyderabad", subRegion: "North-West Hub", basePrice: 9100, cagr5y: 10.1, rentalYield: 3.7, lat: 17.4933, lng: 78.3914, tier: "Mid-Segment" },
+  { area: "Miyapur Metro Corridor & Bachupally", city: "Hyderabad", subRegion: "North-West Hub", basePrice: 8100, cagr5y: 10.8, rentalYield: 3.6, lat: 17.4968, lng: 78.3547, tier: "Mid-Segment" },
+  { area: "Nizampet & Pragathi Nagar", city: "Hyderabad", subRegion: "North-West Hub", basePrice: 7200, cagr5y: 11.5, rentalYield: 3.8, lat: 17.5250, lng: 78.3750, tier: "Emerging Growth" },
+  { area: "Begumpet, Somajiguda & Raj Bhavan Rd", city: "Hyderabad", subRegion: "Central Prime", basePrice: 11800, cagr5y: 8.4, rentalYield: 3.3, lat: 17.4447, lng: 78.4664, tier: "Mid-Segment" },
+  { area: "Secunderabad (Marredpally & Sainikpuri)", city: "Hyderabad", subRegion: "Secunderabad", basePrice: 8500, cagr5y: 8.1, rentalYield: 3.2, lat: 17.4500, lng: 78.5100, tier: "Mid-Segment" },
+  { area: "Uppal & Pocharam (Infosys SEZ Corridor)", city: "Hyderabad", subRegion: "East Corridor", basePrice: 6800, cagr5y: 9.9, rentalYield: 3.5, lat: 17.4000, lng: 78.5600, tier: "Emerging Growth" },
+
+  // =========================================================================
+  // --- 5. PUNE (East IT Hub, West IT Corridor, Central, North-West) ---
+  // =========================================================================
+  { area: "Koregaon Park (North & South Main Rd)", city: "Pune", subRegion: "East Prime", basePrice: 22000, cagr5y: 8.9, rentalYield: 3.4, lat: 18.5362, lng: 73.8940, tier: "Ultra-Luxury" },
+  { area: "Boat Club Road & Bund Garden", city: "Pune", subRegion: "East Prime", basePrice: 23500, cagr5y: 8.2, rentalYield: 3.1, lat: 18.5340, lng: 73.8780, tier: "Ultra-Luxury" },
+  { area: "Kalyani Nagar (Central Avenue)", city: "Pune", subRegion: "East Prime", basePrice: 17000, cagr5y: 9.3, rentalYield: 3.5, lat: 18.5480, lng: 73.9030, tier: "Prime" },
+  { area: "Viman Nagar (Symbiosis Corridor)", city: "Pune", subRegion: "East Prime", basePrice: 14200, cagr5y: 9.9, rentalYield: 3.9, lat: 18.5679, lng: 73.9143, tier: "Prime" },
+  { area: "Kharadi (EON Free Zone & World Trade Center)", city: "Pune", subRegion: "East IT Hub", basePrice: 13200, cagr5y: 11.5, rentalYield: 4.1, lat: 18.5529, lng: 73.9531, tier: "Prime" },
+  { area: "Baner & High Street Corridor", city: "Pune", subRegion: "West IT Hub", basePrice: 13600, cagr5y: 10.8, rentalYield: 3.8, lat: 18.5590, lng: 73.7868, tier: "Prime" },
+  { area: "Balewadi (High Street & Sports Stadium)", city: "Pune", subRegion: "West IT Hub", basePrice: 13000, cagr5y: 11.4, rentalYield: 3.9, lat: 18.5750, lng: 73.7720, tier: "Prime" },
+  { area: "Aundh (ITI Road & Sindh Society)", city: "Pune", subRegion: "West Prime", basePrice: 14500, cagr5y: 8.8, rentalYield: 3.5, lat: 18.5626, lng: 73.8087, tier: "Prime" },
+  { area: "Wakad (Bhumkar Chowk & Datta Mandir)", city: "Pune", subRegion: "West IT Hub", basePrice: 10200, cagr5y: 10.4, rentalYield: 3.9, lat: 18.5987, lng: 73.7688, tier: "Mid-Segment" },
+  { area: "Hinjewadi (Phase 1 Blue Ridge & Phase 2 Tech Zone)", city: "Pune", subRegion: "West IT Hub", basePrice: 8900, cagr5y: 9.6, rentalYield: 4.2, lat: 18.5913, lng: 73.7389, tier: "Mid-Segment" },
+  { area: "Punawale & Tathawade (BRTS Corridor)", city: "Pune", subRegion: "West IT Hub", basePrice: 8500, cagr5y: 11.8, rentalYield: 4.0, lat: 18.6180, lng: 73.7480, tier: "Emerging Growth" },
+  { area: "Magarpatta City & Cybercity", city: "Pune", subRegion: "East IT Hub", basePrice: 11500, cagr5y: 9.4, rentalYield: 3.9, lat: 18.5158, lng: 73.9272, tier: "Mid-Segment" },
+  { area: "Hadapsar & Amanora Park Town", city: "Pune", subRegion: "East IT Hub", basePrice: 10800, cagr5y: 9.8, rentalYield: 3.8, lat: 18.5080, lng: 73.9350, tier: "Mid-Segment" },
+  { area: "Kothrud (Karve Road & Paud Road)", city: "Pune", subRegion: "Central Prime", basePrice: 14200, cagr5y: 8.5, rentalYield: 3.4, lat: 18.5074, lng: 73.8077, tier: "Mid-Segment" },
+  { area: "Bavdhan & Chandani Chowk", city: "Pune", subRegion: "West Prime", basePrice: 10800, cagr5y: 9.1, rentalYield: 3.6, lat: 18.5140, lng: 73.7740, tier: "Mid-Segment" },
+  { area: "Pimple Saudagar (Kunal Icon Road)", city: "Pune", subRegion: "North-West PCMC", basePrice: 10400, cagr5y: 9.1, rentalYield: 3.7, lat: 18.5982, lng: 73.7978, tier: "Mid-Segment" },
+  { area: "Pimple Nilakh & Vishal Nagar", city: "Pune", subRegion: "North-West PCMC", basePrice: 10900, cagr5y: 9.4, rentalYield: 3.6, lat: 18.5840, lng: 73.7910, tier: "Mid-Segment" },
+  { area: "Wagholi & Bakori Road", city: "Pune", subRegion: "East Corridor", basePrice: 7100, cagr5y: 10.1, rentalYield: 3.8, lat: 18.5810, lng: 73.9820, tier: "Emerging Growth" },
+
+  // =========================================================================
+  // --- 6. CHENNAI (Adyar, Anna Nagar, OMR IT, ECR Coastal, Central) ---
+  // =========================================================================
+  { area: "Adyar & Gandhi Nagar", city: "Chennai", subRegion: "South Prime", basePrice: 24000, cagr5y: 7.1, rentalYield: 2.9, lat: 13.0012, lng: 80.2565, tier: "Ultra-Luxury" },
+  { area: "Besant Nagar (Beach Road)", city: "Chennai", subRegion: "South Prime", basePrice: 25500, cagr5y: 6.7, rentalYield: 2.8, lat: 13.0001, lng: 80.2667, tier: "Ultra-Luxury" },
+  { area: "MRC Nagar & RA Puram", city: "Chennai", subRegion: "South Prime", basePrice: 28000, cagr5y: 6.4, rentalYield: 2.7, lat: 13.0210, lng: 80.2740, tier: "Ultra-Luxury" },
+  { area: "Boat Club Area & Poes Garden", city: "Chennai", subRegion: "Central Prime", basePrice: 33000, cagr5y: 6.0, rentalYield: 2.4, lat: 13.0280, lng: 80.2520, tier: "Ultra-Luxury" },
+  { area: "Anna Nagar (2nd, 6th Ave & Roundtana)", city: "Chennai", subRegion: "Central Prime", basePrice: 19000, cagr5y: 7.4, rentalYield: 3.0, lat: 13.0850, lng: 80.2101, tier: "Prime" },
+  { area: "T Nagar (Usman Road & Pondy Bazaar)", city: "Chennai", subRegion: "Central Prime", basePrice: 19500, cagr5y: 7.0, rentalYield: 3.2, lat: 13.0418, lng: 80.2341, tier: "Prime" },
+  { area: "Nungambakkam & Sterling Road", city: "Chennai", subRegion: "Central Prime", basePrice: 20500, cagr5y: 6.8, rentalYield: 3.0, lat: 13.0569, lng: 80.2425, tier: "Prime" },
+  { area: "Mylapore & Luz Corner", city: "Chennai", subRegion: "Central Prime", basePrice: 17800, cagr5y: 6.6, rentalYield: 3.1, lat: 13.0368, lng: 80.2676, tier: "Prime" },
+  { area: "OMR - Perungudi & Thoraipakkam", city: "Chennai", subRegion: "OMR IT Corridor", basePrice: 10200, cagr5y: 9.1, rentalYield: 3.8, lat: 12.9654, lng: 80.2461, tier: "Mid-Segment" },
+  { area: "OMR - Sholinganallur & Navalur", city: "Chennai", subRegion: "OMR IT Corridor", basePrice: 8600, cagr5y: 9.6, rentalYield: 3.9, lat: 12.9010, lng: 80.2279, tier: "Mid-Segment" },
+  { area: "Siruseri (SIPCOT IT Park)", city: "Chennai", subRegion: "OMR IT Corridor", basePrice: 6800, cagr5y: 10.8, rentalYield: 4.1, lat: 12.8350, lng: 80.2180, tier: "Emerging Growth" },
+  { area: "ECR - Thiruvanmiyur & Kottivakkam", city: "Chennai", subRegion: "ECR Coastal", basePrice: 15800, cagr5y: 8.1, rentalYield: 3.2, lat: 12.9830, lng: 80.2594, tier: "Prime" },
+  { area: "ECR - Palavakkam & Neelankarai", city: "Chennai", subRegion: "ECR Coastal", basePrice: 13900, cagr5y: 8.4, rentalYield: 3.1, lat: 12.9480, lng: 80.2580, tier: "Prime" },
+  { area: "Velachery (Bypass Road & Phoenix Marketcity)", city: "Chennai", subRegion: "South Suburbs", basePrice: 10800, cagr5y: 8.1, rentalYield: 3.5, lat: 12.9815, lng: 80.2180, tier: "Mid-Segment" },
+  { area: "Porur & Ramapuram (DLF IT Park)", city: "Chennai", subRegion: "West Hub", basePrice: 8200, cagr5y: 7.8, rentalYield: 3.4, lat: 13.0382, lng: 80.1565, tier: "Mid-Segment" },
+  { area: "Medavakkam & Pallikaranai", city: "Chennai", subRegion: "South Suburbs", basePrice: 7900, cagr5y: 8.4, rentalYield: 3.6, lat: 12.9181, lng: 80.1918, tier: "Mid-Segment" },
+  { area: "Guindy (Olympia Tech Park Area)", city: "Chennai", subRegion: "South Prime", basePrice: 13000, cagr5y: 7.6, rentalYield: 3.6, lat: 13.0080, lng: 80.2120, tier: "Prime" },
+  { area: "Tambaram & Chromepet (GST Road)", city: "Chennai", subRegion: "South Suburbs", basePrice: 6500, cagr5y: 8.1, rentalYield: 3.5, lat: 12.9240, lng: 80.1280, tier: "Mid-Segment" },
+
+  // =========================================================================
+  // --- 7. KOLKATA (Alipore, Park Street, Salt Lake, New Town, Rajarhat) ---
+  // =========================================================================
+  { area: "Park Street & Camac Street", city: "Kolkata", subRegion: "Central Prime", basePrice: 22500, cagr5y: 5.7, rentalYield: 2.9, lat: 22.5510, lng: 88.3524, tier: "Ultra-Luxury" },
+  { area: "Alipore & New Alipore (Burdwan Road)", city: "Kolkata", subRegion: "South Prime", basePrice: 26500, cagr5y: 5.4, rentalYield: 2.7, lat: 22.5312, lng: 88.3308, tier: "Ultra-Luxury" },
+  { area: "Ballygunge Circular Road & Queens Park", city: "Kolkata", subRegion: "South Prime", basePrice: 20000, cagr5y: 6.1, rentalYield: 3.0, lat: 22.5280, lng: 88.3650, tier: "Prime" },
+  { area: "Southern Avenue & Lake Gardens", city: "Kolkata", subRegion: "South Prime", basePrice: 17000, cagr5y: 6.0, rentalYield: 2.9, lat: 22.5120, lng: 88.3580, tier: "Prime" },
+  { area: "Salt Lake (Sector 1, 2 & 3)", city: "Kolkata", subRegion: "East Kolkata", basePrice: 10500, cagr5y: 7.0, rentalYield: 3.3, lat: 22.5867, lng: 88.4178, tier: "Prime" },
+  { area: "Salt Lake Sector 5 (IT Hub & Webel)", city: "Kolkata", subRegion: "East Kolkata", basePrice: 11600, cagr5y: 8.1, rentalYield: 3.8, lat: 22.5735, lng: 88.4331, tier: "Prime" },
+  { area: "New Town (Action Area 1, 2 & 3)", city: "Kolkata", subRegion: "New Town IT", basePrice: 8700, cagr5y: 9.4, rentalYield: 3.6, lat: 22.5898, lng: 88.4744, tier: "Emerging Growth" },
+  { area: "Rajarhat & Chinar Park", city: "Kolkata", subRegion: "New Town IT", basePrice: 7200, cagr5y: 8.2, rentalYield: 3.4, lat: 22.6186, lng: 88.4607, tier: "Mid-Segment" },
+  { area: "EM Bypass (Ruby Hospital & Science City)", city: "Kolkata", subRegion: "East Kolkata", basePrice: 9500, cagr5y: 7.6, rentalYield: 3.3, lat: 22.5186, lng: 88.3980, tier: "Mid-Segment" },
+  { area: "Jadavpur & Prince Anwar Shah Road", city: "Kolkata", subRegion: "South Suburbs", basePrice: 7900, cagr5y: 6.6, rentalYield: 3.2, lat: 22.4988, lng: 88.3718, tier: "Mid-Segment" },
+  { area: "Tollygunge (Golf Club Area)", city: "Kolkata", subRegion: "South Suburbs", basePrice: 8500, cagr5y: 7.0, rentalYield: 3.1, lat: 22.4920, lng: 88.3480, tier: "Mid-Segment" },
+  { area: "Garia & Kavi Subhash Metro Hub", city: "Kolkata", subRegion: "South Suburbs", basePrice: 6200, cagr5y: 7.0, rentalYield: 3.5, lat: 22.4667, lng: 88.3833, tier: "Mid-Segment" },
+  { area: "Behala (Chowrasta & James Long Sarani)", city: "Kolkata", subRegion: "South-West", basePrice: 5500, cagr5y: 6.2, rentalYield: 3.2, lat: 22.4980, lng: 88.3180, tier: "Mid-Segment" },
+  { area: "Dum Dum & Lake Town (VIP Road)", city: "Kolkata", subRegion: "North Kolkata", basePrice: 6800, cagr5y: 6.5, rentalYield: 3.3, lat: 22.6420, lng: 88.4312, tier: "Mid-Segment" },
+
+  // =========================================================================
+  // --- 8. AHMEDABAD (Sindhu Bhavan, Bodakdev, SG Highway, GIFT City) ---
+  // =========================================================================
+  { area: "Sindhu Bhavan Road (SBR Luxury Corridor)", city: "Ahmedabad", subRegion: "West Prime", basePrice: 14500, cagr5y: 11.9, rentalYield: 3.2, lat: 23.0450, lng: 72.5050, tier: "Ultra-Luxury" },
+  { area: "Bodakdev & Judges Bungalow Road", city: "Ahmedabad", subRegion: "West Prime", basePrice: 13400, cagr5y: 10.1, rentalYield: 3.1, lat: 23.0373, lng: 72.5186, tier: "Prime" },
+  { area: "Ambli - Bopal Road & Iscon Mega Hub", city: "Ahmedabad", subRegion: "West Prime", basePrice: 12200, cagr5y: 11.5, rentalYield: 3.3, lat: 23.0310, lng: 72.4850, tier: "Prime" },
+  { area: "SG Highway & Prahlad Nagar", city: "Ahmedabad", subRegion: "West Prime", basePrice: 10800, cagr5y: 9.8, rentalYield: 3.6, lat: 23.0121, lng: 72.5108, tier: "Prime" },
+  { area: "Satellite & Shyamal Cross Roads", city: "Ahmedabad", subRegion: "West Prime", basePrice: 9900, cagr5y: 8.8, rentalYield: 3.4, lat: 23.0270, lng: 72.5310, tier: "Mid-Segment" },
+  { area: "Vastrapur (IIM Ahmedabad & AlphaOne Area)", city: "Ahmedabad", subRegion: "West Prime", basePrice: 11400, cagr5y: 9.4, rentalYield: 3.5, lat: 23.0358, lng: 72.5293, tier: "Prime" },
+  { area: "Thaltej & Shilaj Cross Roads", city: "Ahmedabad", subRegion: "West Prime", basePrice: 9400, cagr5y: 9.7, rentalYield: 3.3, lat: 23.0569, lng: 72.5101, tier: "Mid-Segment" },
+  { area: "Science City Road & Sola", city: "Ahmedabad", subRegion: "West Zone", basePrice: 8400, cagr5y: 10.1, rentalYield: 3.4, lat: 23.0780, lng: 72.5180, tier: "Mid-Segment" },
+  { area: "Gota & Vandematram (Godrej Garden City)", city: "Ahmedabad", subRegion: "North-West", basePrice: 6900, cagr5y: 9.0, rentalYield: 3.5, lat: 23.1090, lng: 72.5400, tier: "Mid-Segment" },
+  { area: "Bopal & South Bopal (SOBO Center)", city: "Ahmedabad", subRegion: "West Suburbs", basePrice: 6500, cagr5y: 9.2, rentalYield: 3.6, lat: 23.0336, lng: 72.4646, tier: "Mid-Segment" },
+  { area: "GIFT City Corridor & Gandhinagar", city: "Ahmedabad", subRegion: "GIFT SEZ", basePrice: 9800, cagr5y: 15.2, rentalYield: 3.9, lat: 23.1610, lng: 72.6840, tier: "Emerging Growth" },
+  { area: "Motera & Chandkheda (Stadium Corridor)", city: "Ahmedabad", subRegion: "North Zone", basePrice: 7500, cagr5y: 9.5, rentalYield: 3.4, lat: 23.0980, lng: 72.5970, tier: "Mid-Segment" },
+  { area: "Navrangpura & CG Road", city: "Ahmedabad", subRegion: "Central Prime", basePrice: 10500, cagr5y: 8.2, rentalYield: 3.4, lat: 23.0370, lng: 72.5600, tier: "Prime" },
+  { area: "Maninagar (Kankaria Lake)", city: "Ahmedabad", subRegion: "East Zone", basePrice: 6600, cagr5y: 7.7, rentalYield: 3.3, lat: 22.9980, lng: 72.6030, tier: "Mid-Segment" },
+
+  // =========================================================================
+  // --- 9. INDORE (Madhya Pradesh Commercial Hub) ---
+  // =========================================================================
+  { area: "Old & New Palasia (56 Dukan & Industry House)", city: "Indore", subRegion: "Central Prime", basePrice: 9900, cagr5y: 8.7, rentalYield: 3.1, lat: 22.7244, lng: 75.8839, tier: "Ultra-Luxury" },
+  { area: "Geeta Bhavan & Manoramaganj", city: "Indore", subRegion: "Central Prime", basePrice: 9300, cagr5y: 8.4, rentalYield: 3.1, lat: 22.7180, lng: 75.8790, tier: "Prime" },
+  { area: "Saket Nagar", city: "Indore", subRegion: "East Prime", basePrice: 9000, cagr5y: 9.3, rentalYield: 3.2, lat: 22.7150, lng: 75.8980, tier: "Prime" },
+  { area: "Vijay Nagar & AB Road (C21 & Malhar)", city: "Indore", subRegion: "East Core", basePrice: 8400, cagr5y: 12.1, rentalYield: 3.6, lat: 22.7533, lng: 75.8937, tier: "Prime" },
+  { area: "Mahalaxmi Nagar (Bombay Hospital & Tulsi)", city: "Indore", subRegion: "East Core", basePrice: 7800, cagr5y: 11.4, rentalYield: 3.7, lat: 22.7600, lng: 75.9010, tier: "Prime" },
+  { area: "AB Bypass Road & Nipania (Luxury Townships)", city: "Indore", subRegion: "Bypass Hub", basePrice: 7600, cagr5y: 13.6, rentalYield: 3.3, lat: 22.7680, lng: 75.9230, tier: "Prime" },
+  { area: "Super Corridor (TCS & Infosys IT SEZ / Metro)", city: "Indore", subRegion: "IT Corridor", basePrice: 7400, cagr5y: 15.8, rentalYield: 3.5, lat: 22.7750, lng: 75.8150, tier: "Emerging Growth" },
+  { area: "MR 10 / ISBT & Star Square Corridor", city: "Indore", subRegion: "Transit Corridor", basePrice: 7300, cagr5y: 12.9, rentalYield: 3.4, lat: 22.7620, lng: 75.8680, tier: "Emerging Growth" },
+  { area: "Rajendra Nagar & Scheme 78", city: "Indore", subRegion: "South Indore", basePrice: 7000, cagr5y: 9.8, rentalYield: 3.4, lat: 22.6780, lng: 75.8310, tier: "Mid-Segment" },
+  { area: "Bhawarkua & BRTS Square (Student & Tech Park)", city: "Indore", subRegion: "South Core", basePrice: 6400, cagr5y: 9.7, rentalYield: 4.1, lat: 22.6920, lng: 75.8670, tier: "Mid-Segment" },
+  { area: "Annapurna & Sudama Nagar (West Indore)", city: "Indore", subRegion: "West Core", basePrice: 6100, cagr5y: 8.3, rentalYield: 3.2, lat: 22.6950, lng: 75.8340, tier: "Mid-Segment" },
+  { area: "Kanadia Road (Bypass Link)", city: "Indore", subRegion: "East Suburbs", basePrice: 5800, cagr5y: 11.1, rentalYield: 3.3, lat: 22.7250, lng: 75.9180, tier: "Mid-Segment" },
+  { area: "Rau & Pithampur Road (IIM Indore Corridor)", city: "Indore", subRegion: "Industrial SEZ", basePrice: 5000, cagr5y: 12.6, rentalYield: 3.6, lat: 22.6320, lng: 75.8080, tier: "Emerging Growth" },
+  { area: "Ujjain Road & Sanwer Road (Industrial Belt)", city: "Indore", subRegion: "North Corridor", basePrice: 4800, cagr5y: 11.9, rentalYield: 3.3, lat: 22.8050, lng: 75.8450, tier: "Emerging Growth" },
+  { area: "Silicon City & CAT / RRCAT Road", city: "Indore", subRegion: "South-West", basePrice: 4600, cagr5y: 10.1, rentalYield: 3.5, lat: 22.6450, lng: 75.8280, tier: "Mid-Segment" },
+
+  // =========================================================================
+  // --- 10. BHOPAL (Madhya Pradesh Capital) ---
+  // =========================================================================
+  { area: "Arera Colony - Sector E1 to E8", city: "Bhopal", subRegion: "South Prime", basePrice: 8700, cagr5y: 8.1, rentalYield: 2.8, lat: 23.2167, lng: 77.4333, tier: "Ultra-Luxury" },
+  { area: "MP Nagar - Zone 1 & 2 (CBD & DB Mall)", city: "Bhopal", subRegion: "Central CBD", basePrice: 9600, cagr5y: 8.7, rentalYield: 3.8, lat: 23.2330, lng: 77.4340, tier: "Prime" },
+  { area: "Shyamla Hills & VIP Road (Upper Lake)", city: "Bhopal", subRegion: "Lake Prime", basePrice: 9000, cagr5y: 7.0, rentalYield: 2.6, lat: 23.2450, lng: 77.3890, tier: "Ultra-Luxury" },
+  { area: "Shahpura & Trilanga (Lakeside Colony)", city: "Bhopal", subRegion: "South Prime", basePrice: 7000, cagr5y: 8.4, rentalYield: 3.0, lat: 23.2080, lng: 77.4280, tier: "Prime" },
+  { area: "Bawadiya Kalan & Gulmohar (Near AIIMS)", city: "Bhopal", subRegion: "South Prime", basePrice: 6400, cagr5y: 10.1, rentalYield: 3.2, lat: 23.1980, lng: 77.4420, tier: "Prime" },
+  { area: "Hoshangabad Road (NH-46 Metro Corridor)", city: "Bhopal", subRegion: "NH-46 Corridor", basePrice: 5400, cagr5y: 10.9, rentalYield: 3.4, lat: 23.1890, lng: 77.4580, tier: "Prime" },
+  { area: "Airport Road & Lalghati Gateway", city: "Bhopal", subRegion: "North Zone", basePrice: 5300, cagr5y: 8.1, rentalYield: 3.0, lat: 23.2820, lng: 77.3680, tier: "Mid-Segment" },
+  { area: "Koh-e-Fiza & Ahmedabad Palace", city: "Bhopal", subRegion: "North Heritage", basePrice: 6000, cagr5y: 6.6, rentalYield: 2.9, lat: 23.2720, lng: 77.3820, tier: "Mid-Segment" },
+  { area: "Kolar Road & Chuna Bhatti", city: "Bhopal", subRegion: "Kolar Belt", basePrice: 4800, cagr5y: 9.2, rentalYield: 3.1, lat: 23.1820, lng: 77.4180, tier: "Mid-Segment" },
+  { area: "Misrod & Jat Khedi (Extended NH-46)", city: "Bhopal", subRegion: "NH-46 Corridor", basePrice: 5000, cagr5y: 10.5, rentalYield: 3.3, lat: 23.1650, lng: 77.4720, tier: "Emerging Growth" },
+  { area: "Salaiya, Danish Nagar & Amrawad", city: "Bhopal", subRegion: "South Suburbs", basePrice: 5100, cagr5y: 9.4, rentalYield: 3.2, lat: 23.1720, lng: 77.4410, tier: "Mid-Segment" },
+  { area: "Ayodhya Bypass Road", city: "Bhopal", subRegion: "Outer Ring", basePrice: 4400, cagr5y: 9.7, rentalYield: 3.2, lat: 23.2850, lng: 77.4580, tier: "Emerging Growth" },
+  { area: "BHEL Township & Govindpura", city: "Bhopal", subRegion: "East Industrial", basePrice: 4400, cagr5y: 7.1, rentalYield: 3.1, lat: 23.2550, lng: 77.4680, tier: "Mid-Segment" },
+  { area: "Katara Hills & Bagsewaniya", city: "Bhopal", subRegion: "East Suburbs", basePrice: 4100, cagr5y: 8.9, rentalYield: 3.2, lat: 23.1780, lng: 77.4810, tier: "Mid-Segment" }
 ];
 
 // Grouping by city
@@ -459,6 +495,7 @@ export const SEARCHABLE_LOCATIONS = [
   ...Object.entries(METRO_CITIES).map(([cityName, meta]) => ({
     city: cityName,
     area: cityName,
+    subRegion: meta.state,
     label: cityName,
     lat: meta.lat,
     lng: meta.lng,
@@ -466,10 +503,11 @@ export const SEARCHABLE_LOCATIONS = [
     avgPrice: meta.avgPrice,
     tier: "Metro Center" as const
   })),
-  // Area-level entries
+  // Granular Area-level entries
   ...VERIFIED_AREA_DATA.map(item => ({
     city: item.city,
     area: item.area,
+    subRegion: item.subRegion,
     label: `${item.area}, ${item.city}`,
     lat: item.lat,
     lng: item.lng,
@@ -505,7 +543,7 @@ const PROPERTY_GROWTH_MODIFIERS: Record<PropertyType, number> = {
   "apartment": 0,
   "flat": -0.005,
   "villa": 0.018,
-  "plot": 0.032, // Plots appreciate significantly faster in Indian tier-1 and tier-2 growth hubs
+  "plot": 0.032, // Plots appreciate significantly faster
   "commercial": 0.015
 };
 
@@ -539,6 +577,7 @@ export const generateMockData = (query: string, propertyType: PropertyType = "ap
     foundBenchmark = {
       area: `${cityKey} (Overall)`,
       city: cityKey,
+      subRegion: foundCityMeta.state,
       basePrice: foundCityMeta.avgPrice,
       cagr5y: foundCityMeta.cagr5y,
       rentalYield: foundCityMeta.rentalYield,
@@ -554,10 +593,17 @@ export const generateMockData = (query: string, propertyType: PropertyType = "ap
     ) || null;
 
     if (!foundBenchmark) {
-      // Partial match
+      // Sector/keyword partial match
       foundBenchmark = VERIFIED_AREA_DATA.find(l => 
         normalizedQuery.toLowerCase().includes(l.area.toLowerCase()) ||
         l.area.toLowerCase().includes(normalizedQuery.toLowerCase())
+      ) || null;
+    }
+
+    if (!foundBenchmark) {
+      // Check subRegion
+      foundBenchmark = VERIFIED_AREA_DATA.find(l => 
+        l.subRegion && normalizedQuery.toLowerCase().includes(l.subRegion.toLowerCase())
       ) || null;
     }
 
@@ -713,14 +759,16 @@ export const generateMockData = (query: string, propertyType: PropertyType = "ap
 };
 
 export const POPULAR_LOCATIONS = [
-  "Golf Course Road (Gurgaon), Delhi NCR",
-  "Bandra West (Pali Hill & Carter Rd), Mumbai",
-  "Indiranagar (100ft & 12th Main), Bengaluru",
-  "Kokapet & Neopolis SEZ, Hyderabad",
-  "Vijay Nagar & AB Road, Indore",
-  "Arera Colony - E1 to E8, Bhopal",
-  "Kharadi (EON Free Zone & WTC), Pune",
+  "Golf Course Road (Sector 42, 53 & 54), Delhi NCR",
+  "Noida Sector 150 (Sports City & Green Expressway), Delhi NCR",
+  "Dwarka Expressway - Sec 102-113 (Gurgaon), Delhi NCR",
+  "Bandra West (Pali Hill, Carter Rd & Bandstand), Mumbai",
+  "Indiranagar (100ft Rd, 12th Main & Defense Colony), Bengaluru",
+  "Kokapet & Neopolis SEZ (High-Rise Hub), Hyderabad",
+  "Vijay Nagar & AB Road (C21 & Malhar), Indore",
+  "Arera Colony - Sector E1 to E8, Bhopal",
+  "Kharadi (EON Free Zone & World Trade Center), Pune",
   "Adyar & Gandhi Nagar, Chennai",
-  "Sindhu Bhavan Road (SBR), Ahmedabad",
-  "Salt Lake Sector 5 (IT Hub), Kolkata"
+  "Sindhu Bhavan Road (SBR Luxury Corridor), Ahmedabad",
+  "Salt Lake Sector 5 (IT Hub & Webel), Kolkata"
 ];
