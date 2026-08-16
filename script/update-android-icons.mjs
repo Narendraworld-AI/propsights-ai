@@ -4,8 +4,69 @@ import path from 'path';
 const androidResDir = path.resolve('android/app/src/main/res');
 const sourceIconPath = path.resolve('resources/icon.png');
 
+console.log('🔄 Configuring Android 15 (API Level 35) Compatibility & Icons...');
+
+// 1. Configure variables.gradle for Android 15
+const variablesPath = path.resolve('android/variables.gradle');
+if (fs.existsSync(variablesPath)) {
+  let variablesContent = `ext {
+    minSdkVersion = 24
+    compileSdkVersion = 35
+    targetSdkVersion = 35
+    androidxActivityVersion = '1.9.2'
+    androidxAppCompatVersion = '1.7.0'
+    androidxCoordinatorLayoutVersion = '1.2.0'
+    androidxCoreVersion = '1.13.1'
+    androidxFragmentVersion = '1.8.3'
+    coreSplashScreenVersion = '1.0.1'
+    androidxWebkitVersion = '1.12.0'
+    junitVersion = '4.13.2'
+    androidxJunitVersion = '1.2.1'
+    androidxEspressoCoreVersion = '3.6.1'
+    cordovaAndroidVersion = '10.1.1'
+}
+`;
+  fs.writeFileSync(variablesPath, variablesContent);
+  console.log('✅ Configured variables.gradle (targetSdkVersion 35 for Android 15)');
+}
+
+// 2. Configure app/build.gradle for signing & ABIs
+const buildGradlePath = path.resolve('android/app/build.gradle');
+if (fs.existsSync(buildGradlePath)) {
+  let buildGradle = fs.readFileSync(buildGradlePath, 'utf-8');
+  buildGradle = buildGradle.replace(/compileSdk\s+\d+/, 'compileSdk 35');
+  buildGradle = buildGradle.replace(/targetSdk\s+\d+/, 'targetSdk 35');
+  buildGradle = buildGradle.replace(/minSdk\s+\d+/, 'minSdk 24');
+
+  if (!buildGradle.includes('v2SigningEnabled')) {
+    buildGradle = buildGradle.replace(
+      /buildTypes\s*{/,
+      `signingConfigs {
+        debug {
+            v1SigningEnabled true
+            v2SigningEnabled true
+        }
+    }
+    buildTypes {`
+    );
+  }
+  fs.writeFileSync(buildGradlePath, buildGradle);
+  console.log('✅ Configured app/build.gradle with V1/V2 signatures and SDK 35');
+}
+
+// 3. Update AndroidManifest.xml for Android 15 requirements
+const manifestPath = path.resolve('android/app/src/main/AndroidManifest.xml');
+if (fs.existsSync(manifestPath)) {
+  let manifest = fs.readFileSync(manifestPath, 'utf-8');
+  if (!manifest.includes('android:exported="true"')) {
+    manifest = manifest.replace(/<activity\s+android:name="\.MainActivity"/, '<activity android:name=".MainActivity" android:exported="true"');
+  }
+  fs.writeFileSync(manifestPath, manifest);
+  console.log('✅ AndroidManifest.xml updated for Android 15');
+}
+
+// 4. Update Launcher & Dock Icons
 if (fs.existsSync(androidResDir) && fs.existsSync(sourceIconPath)) {
-  console.log('🔄 Setting app icon to the selected PropSight dock icon...');
   const iconBuffer = fs.readFileSync(sourceIconPath);
 
   const mipmapDirs = [
@@ -22,19 +83,9 @@ if (fs.existsSync(androidResDir) && fs.existsSync(sourceIconPath)) {
       fs.mkdirSync(targetDir, { recursive: true });
     }
 
-    // Overwrite standard and round launcher icons with the chosen icon
     fs.writeFileSync(path.join(targetDir, 'ic_launcher.png'), iconBuffer);
     fs.writeFileSync(path.join(targetDir, 'ic_launcher_round.png'), iconBuffer);
     fs.writeFileSync(path.join(targetDir, 'ic_launcher_foreground.png'), iconBuffer);
-  }
-
-  // Also update drawable splash & launcher
-  const drawableDirs = ['drawable', 'drawable-v24', 'drawable-land-mdpi', 'drawable-land-hdpi', 'drawable-port-mdpi', 'drawable-port-hdpi'];
-  for (const dDir of drawableDirs) {
-    const targetDir = path.join(androidResDir, dDir);
-    if (fs.existsSync(targetDir)) {
-      fs.writeFileSync(path.join(targetDir, 'splash.png'), iconBuffer);
-    }
   }
 
   // Update App Display Name in strings.xml
@@ -46,5 +97,5 @@ if (fs.existsSync(androidResDir) && fs.existsSync(sourceIconPath)) {
     fs.writeFileSync(stringsPath, strings);
   }
 
-  console.log('✅ Android Launcher Icons successfully replaced with selected icon!');
+  console.log('✅ App Launcher Icons and Titles updated!');
 }
